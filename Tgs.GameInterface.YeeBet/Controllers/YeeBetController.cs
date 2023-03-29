@@ -30,8 +30,8 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("fund/out", Name = "FundOut")]
     public async ValueTask<FundResultViewModel> FundOutAsync(
-            [FromServices] IGetService<FundOutQuery, FundResult> service,
-            FundViewModel source)
+        [FromServices] IGetService<FundOutQuery, FundResult> service,
+        FundViewModel source)
     {
         var query = new FundOutQuery(
             ApiUrl: source.ApiUrl,
@@ -128,10 +128,9 @@ public class YeeBetController : ControllerBase
             ClientType: source.ClientType,
             LanguageId: source.LanguageId);
 
-        return service
-         .GetAsync(
-             query: query,
-             cancellationToken: HttpContext.RequestAborted);
+        return service.GetAsync(
+            query: query,
+            cancellationToken: HttpContext.RequestAborted);
     }
 
     /// <summary>
@@ -157,8 +156,8 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("player/create", Name = "PlayerCreate")]
     public ValueTask PlayerCreateAsync(
-            [FromServices] ICommandService<PlayerCreateCommand> service,
-            PlayerCreateViewModel source)
+        [FromServices] ICommandService<PlayerCreateCommand> service,
+        PlayerCreateViewModel source)
     {
         var command = new PlayerCreateCommand(
             ApiUrl: source.ApiUrl,
@@ -170,8 +169,8 @@ public class YeeBetController : ControllerBase
             LanguageId: source.LanguageId);
 
         return service.ExecuteAsync(
-                command: command,
-                cancellationToken: HttpContext.RequestAborted);
+            command: command,
+            cancellationToken: HttpContext.RequestAborted);
     }
 
     /// <summary>
@@ -194,8 +193,8 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("player/balance", Name = "PlayerBalance")]
     public async ValueTask<PlayerBalanceResultViewModel> PlayerBalanceAsync(
-            [FromServices] IGetService<PlayerBalanceQuery, PlayerBalanceResult> service,
-            PlayerBalanceViewModel source)
+        [FromServices] IGetService<PlayerBalanceQuery, PlayerBalanceResult> service,
+        PlayerBalanceViewModel source)
     {
         var query = new PlayerBalanceQuery(
             ApiUrl: source.ApiUrl,
@@ -204,10 +203,10 @@ public class YeeBetController : ControllerBase
             Username: source.PlayerCode);
 
         var result = await service
-                .GetAsync(
-                    query: query,
-                    cancellationToken: HttpContext.RequestAborted)
-                .ConfigureAwait(false);
+            .GetAsync(
+                query: query,
+                cancellationToken: HttpContext.RequestAborted)
+            .ConfigureAwait(false);
 
         return new PlayerBalanceResultViewModel(
             result.IsPlayerExist,
@@ -265,8 +264,8 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("game/record/history")]
     public async IAsyncEnumerable<GameRecordResultViewModel> GameRecordHistoryAsync(
-            [FromServices] IQueryService<GameRecordHistoryQuery, GameRecordResult> service,
-            GameRecordViewModel source)
+        [FromServices] IQueryService<GameRecordHistoryQuery, GameRecordResult> service,
+        GameRecordViewModel source)
     {
         var query = new GameRecordHistoryQuery(
             ApiUrl: source.ApiUrl,
@@ -354,8 +353,8 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("quota")]
     public async IAsyncEnumerable<QuotaResultViewModel> QuotaAsync(
-            [FromServices] IQueryService<QuotaQuery, QuotaInfo> service,
-            QuotaViewModel source)
+        [FromServices] IQueryService<QuotaQuery, QuotaInfo> service,
+        QuotaViewModel source)
     {
         var query = new QuotaQuery(
             ApiUrl: source.ApiUrl,
@@ -407,8 +406,8 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("fund/Status", Name = "FundStatus")]
     public ValueTask<bool> FundStatusAsync(
-            [FromServices] IGetService<FundStatusQuery, bool> service,
-            FundStatusViewModel source)
+        [FromServices] IGetService<FundStatusQuery, bool> service,
+        FundStatusViewModel source)
     {
         var query = new FundStatusQuery(
             ApiUrl: source.ApiUrl,
