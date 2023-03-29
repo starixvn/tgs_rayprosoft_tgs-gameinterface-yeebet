@@ -135,6 +135,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         await _playerCreateService
             .ExecuteAsync(command, context.CancellationToken)
             .ConfigureAwait(false);
+
         return new BaseReply
         {
             State = true
