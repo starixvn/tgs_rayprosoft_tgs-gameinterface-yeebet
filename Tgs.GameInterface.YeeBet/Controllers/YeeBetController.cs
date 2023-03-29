@@ -264,10 +264,10 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("game/record/history")]
     public async IAsyncEnumerable<GameRecordResultViewModel> GameRecordHistoryAsync(
-        [FromServices] IQueryService<GameRecordHistoryQuery, GameRecordResult> service,
+        [FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
         GameRecordViewModel source)
     {
-        var query = new GameRecordHistoryQuery(
+        var query = new GameRecordQuery(
             ApiUrl: source.ApiUrl,
             AppId: source.AppId,
             SecretKey: source.SecretKey,
@@ -324,66 +324,15 @@ public class YeeBetController : ControllerBase
     /// </remarks>
     [HttpPost("game/history/mark", Name = "GameHistoryMark")]
     public ValueTask<bool> GameHistoryMarkAsync(
-        [FromServices] IGetService<GameHistoryMarkQuery, bool> service,
+        [FromServices] IGetService<GameRecordMarkQuery, bool> service,
         GameHistoryMarkViewModel source)
         => service.GetAsync(
-            query: new GameHistoryMarkQuery(
+            query: new GameRecordMarkQuery(
                 source.ApiUrl,
                 source.AppId,
                 source.SecretKey,
                 source.ExternalRoundIds),
-            cancellationToken: HttpContext.RequestAborted);
-
-    /// <summary>
-    /// Games the record history asynchronous.
-    /// </summary>
-    /// <param name="service">The service.</param>
-    /// <param name="source">The source.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <b>Example</b><br />
-    ///
-    ///     Post
-    ///
-    ///         {
-    ///             "apiUrl": "http://api.98kbus.top/",
-    ///             "appId": "xtdA15OTVGEP",
-    ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0"
-    ///         }
-    /// </remarks>
-    [HttpPost("quota")]
-    public async IAsyncEnumerable<QuotaResultViewModel> QuotaAsync(
-        [FromServices] IQueryService<QuotaQuery, QuotaInfo> service,
-        QuotaViewModel source)
-    {
-        var query = new QuotaQuery(
-            ApiUrl: source.ApiUrl,
-            AppId: source.AppId,
-            SecretKey: source.SecretKey);
-
-        var results = await service
-            .QueryAsync(
-                query: query,
-                cancellationToken: HttpContext.RequestAborted)
-            .ToArrayAsync(
-                cancellationToken: HttpContext.RequestAborted)
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<QuotaInfo>();
-
-        if (!results.Any())
-        {
-            yield break;
-        }
-
-        foreach (var result in results)
-        {
-            yield return new QuotaResultViewModel(
-                Id: result.Id,
-                Title: result.Title,
-                Up: result.Up,
-                Down: result.Down);
-        }
-    }
+            cancellationToken: HttpContext.RequestAborted);    
 
     /// <summary>
     /// Funds the status asynchronous.

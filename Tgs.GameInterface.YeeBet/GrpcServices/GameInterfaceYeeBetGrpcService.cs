@@ -15,8 +15,8 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
     private readonly ICommandService<PlayerCreateCommand> _playerCreateService;
     private readonly ICommandService<PlayerLogoutCommand> _playerLogoutService;
     private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
-    private readonly IQueryService<GameRecordHistoryQuery, GameRecordResult> _gameRecordHistoryService;
-    private readonly IGetService<GameHistoryMarkQuery, bool> _gameRecordHistoryMarkService;
+    private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
+    private readonly IGetService<GameRecordMarkQuery, bool> _gameRecordMarkService;
 
     public GameInterfaceYeeBetGrpcService(
         IGetService<FundOutQuery, FundResult> fundOutService,
@@ -26,8 +26,8 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         ICommandService<PlayerCreateCommand> playerCreateService,
         ICommandService<PlayerLogoutCommand> playerLogoutService,
         IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
-        IQueryService<GameRecordHistoryQuery, GameRecordResult> gameRecordHistoryService,
-        IGetService<GameHistoryMarkQuery, bool> gameRecordHistoryMarkService)
+        IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
+        IGetService<GameRecordMarkQuery, bool> gameRecordMarkService)
     {
         _fundOutService = fundOutService;
         _fundInService = fundInService;
@@ -36,8 +36,8 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         _playerCreateService = playerCreateService;
         _playerLogoutService = playerLogoutService;
         _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
-        _gameRecordHistoryService = gameRecordHistoryService;
-        _gameRecordHistoryMarkService = gameRecordHistoryMarkService;
+        _gameRecordService = gameRecordService;
+        _gameRecordMarkService = gameRecordMarkService;
     }
 
     public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)
@@ -181,13 +181,13 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
 
     public override async Task<GameRecordReply> GameRecord(GameRecordRequest request, ServerCallContext context)
     {
-        var query = new GameRecordHistoryQuery(
+        var query = new GameRecordQuery(
             new Uri(request.ApiUrl),
             request.AppId,
             request.SecretKey,
             request.Size);
 
-        var results = await _gameRecordHistoryService
+        var results = await _gameRecordService
             .QueryAsync(query, context.CancellationToken)
             .ToArrayAsync(context.CancellationToken)
             .ConfigureAwait(false);
@@ -220,13 +220,13 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
 
     public override async Task<BaseReply> GameRecordMark(GameRecordMarkRequest request, ServerCallContext context)
     {
-        var query = new GameHistoryMarkQuery(
+        var query = new GameRecordMarkQuery(
             new Uri(request.ApiUrl),
             request.AppId,
             request.SecretKey,
             request.ExternalRoundIds.ToArray());
 
-        var result = await _gameRecordHistoryMarkService
+        var result = await _gameRecordMarkService
             .GetAsync(query, context.CancellationToken)
             .ConfigureAwait(false);
 

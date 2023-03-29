@@ -3,17 +3,17 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-internal class GameRecordHistoryQueryService : IQueryService<GameRecordHistoryQuery, GameRecordResult>
+internal class GameRecordQueryService : IQueryService<GameRecordQuery, GameRecordResult>
 {
     private readonly IGameApiClient _client;
 
-    public GameRecordHistoryQueryService(
+    public GameRecordQueryService(
         IGameApiClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async IAsyncEnumerable<GameRecordResult> QueryAsync(GameRecordHistoryQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordResult> QueryAsync(GameRecordQuery query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var bettingHistoryBets = await _client
             .GetBetsAsync(

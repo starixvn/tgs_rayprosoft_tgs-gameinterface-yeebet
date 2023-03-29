@@ -11,13 +11,13 @@ public class GameRecordHistoryQueryUnitTest
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
-        var query = new GameRecordHistoryQuery(
+        var query = new GameRecordQuery(
             ApiUrl: new Uri("http://api.98kbus.top/"),
             AppId: "xtdA15OTVGEP",
             SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
             Size: 1000);
 
-        var sut = new GameRecordHistoryQueryService(fakeGameApiClient);
+        var sut = new GameRecordQueryService(fakeGameApiClient);
 
         _ = await sut
             .QueryAsync(query)

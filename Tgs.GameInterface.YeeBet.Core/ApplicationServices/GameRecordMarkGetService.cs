@@ -2,17 +2,17 @@
 
 namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-internal class GameHistoryMarkGetService : IGetService<GameHistoryMarkQuery, bool>
+internal class GameRecordMarkGetService : IGetService<GameRecordMarkQuery, bool>
 {
     private readonly IGameApiClient _client;
 
-    public GameHistoryMarkGetService(
+    public GameRecordMarkGetService(
         IGameApiClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public ValueTask<bool> GetAsync(GameHistoryMarkQuery query, CancellationToken cancellationToken = default)
+    public ValueTask<bool> GetAsync(GameRecordMarkQuery query, CancellationToken cancellationToken = default)
         => _client.RemoveBetsAsync(
             apiUrl: query.ApiUrl,
             appId: query.AppId,

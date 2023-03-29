@@ -19,5 +19,6 @@ internal class PlayerCreateCommandService : ICommandService<PlayerCreateCommand>
             command.ClientType,
             command.Currency,
             command.LanguageId,
-            command.PlayerCode);
+            command.PlayerCode,
+            cancellationToken);
 }

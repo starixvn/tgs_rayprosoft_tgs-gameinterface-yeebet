@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-public record GameHistoryMarkQuery(
+public record GameRecordMarkQuery(
     Uri ApiUrl,
     string AppId,
     string SecretKey,
