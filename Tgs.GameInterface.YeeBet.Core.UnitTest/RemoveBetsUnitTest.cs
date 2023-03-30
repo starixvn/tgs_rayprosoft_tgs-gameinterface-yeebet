@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
 
@@ -19,6 +20,10 @@ public class RemoveBetsUnitTest
 
         var url = new Uri(apiUrl, $"/api/data/removebets");
 
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["appid"] = appId;
+        query["ids"] = "889025";
+
         var response = new
         {
             result = 0,
@@ -30,6 +35,7 @@ public class RemoveBetsUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
+            .WithQueryString(query.ToString())
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

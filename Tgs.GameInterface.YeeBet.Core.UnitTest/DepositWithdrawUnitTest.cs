@@ -21,6 +21,14 @@ public class DepositWithdrawUnitTest
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+            ["amount"] = amount.ToString(),
+            ["tradeno"] = tradeNo.ToString(),
+        };
+
         var response = new
         {
             result = 0,
@@ -35,6 +43,8 @@ public class DepositWithdrawUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
@@ -63,6 +73,14 @@ public class DepositWithdrawUnitTest
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+            ["amount"] = amount.ToString(),
+            ["tradeno"] = tradeNo.ToString(),
+        };
+
         var response = new
         {
             result = -1023,
@@ -77,6 +95,8 @@ public class DepositWithdrawUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
@@ -102,6 +122,14 @@ public class DepositWithdrawUnitTest
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+            ["amount"] = amount.ToString(),
+            ["tradeno"] = tradeNo.ToString(),
+        };
+
         var response = new
         {
             result = 0,
@@ -116,6 +144,8 @@ public class DepositWithdrawUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
@@ -144,11 +174,10 @@ public class DepositWithdrawUnitTest
 
         var dict = new Dictionary<string, string>
         {
-            { "appid",appId },
-            { "username",username },
+            ["appid"] = appId,
+            ["username"] = username,
+            ["amount"] = amount.ToString(),
         };
-
-        var sign = YeeBetHasher.ComputeHash(dict, secretKey);
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
@@ -166,6 +195,8 @@ public class DepositWithdrawUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

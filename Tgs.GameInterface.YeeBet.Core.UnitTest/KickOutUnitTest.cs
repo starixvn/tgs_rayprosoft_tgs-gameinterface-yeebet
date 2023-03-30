@@ -19,6 +19,12 @@ public class KickOutUnitTest
 
         var url = new Uri(apiUrl, $"/api/kickout");
 
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+        };
+
         var response = new
         {
             result = 0,
@@ -30,6 +36,8 @@ public class KickOutUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
@@ -51,15 +59,13 @@ public class KickOutUnitTest
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
 
+        var url = new Uri(apiUrl, $"/api/kickout");
+
         var dict = new Dictionary<string, string>
         {
-            { "appid",appId },
-            { "username",username },
+            ["appid"] = appId,
+            ["username"] = username,
         };
-
-        var sign = YeeBetHasher.ComputeHash(dict, secretKey);
-
-        var url = new Uri(apiUrl, $"/api/kickout");
 
         var response = new
         {
@@ -72,6 +78,8 @@ public class KickOutUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
 
@@ -15,9 +16,13 @@ public class BalanceUnitTest
         var username = "4ucmqplxb029";
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
-        var fakeLog = NullLogger<GameApiClient>.Instance;        
+        var fakeLog = NullLogger<GameApiClient>.Instance;
 
         var url = new Uri(apiUrl, $"/api/user/balance");
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["appid"] = appId;
+        query["username"] = username;
 
         var response = new
         {
@@ -33,6 +38,7 @@ public class BalanceUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
+            .WithQueryString(query.ToString())
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
@@ -55,9 +61,13 @@ public class BalanceUnitTest
         var username = "4ucmqplxb028";
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
-        var fakeLog = NullLogger<GameApiClient>.Instance;     
+        var fakeLog = NullLogger<GameApiClient>.Instance;
 
         var url = new Uri(apiUrl, $"/api/user/balance");
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["appid"] = appId;
+        query["username"] = username;
 
         var response = new
         {
@@ -73,6 +83,7 @@ public class BalanceUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
+            .WithQueryString(query.ToString())
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
 
@@ -20,6 +21,13 @@ public class DepositWithdrawHistoryUnitTest
 
         var url = new Uri(apiUrl, $"/api/user/trade");
 
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["appid"] = appId;
+        query["username"] = username;
+        query["tradeno"] = tradeNo.ToString();
+        query["size"] = 1.ToString();
+        query["index"] = 1.ToString();
+
         var response = new
         {
             result = 0,
@@ -33,6 +41,7 @@ public class DepositWithdrawHistoryUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
+            .WithQueryString(query.ToString())
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
@@ -59,6 +68,13 @@ public class DepositWithdrawHistoryUnitTest
 
         var url = new Uri(apiUrl, $"/api/user/trade");
 
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["appid"] = appId;
+        query["username"] = username;
+        query["tradeno"] = tradeNo.ToString();
+        query["size"] = 1.ToString();
+        query["index"] = 1.ToString();
+
         var response = new
         {
             result = 0,
@@ -72,6 +88,7 @@ public class DepositWithdrawHistoryUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
+            .WithQueryString(query.ToString())
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

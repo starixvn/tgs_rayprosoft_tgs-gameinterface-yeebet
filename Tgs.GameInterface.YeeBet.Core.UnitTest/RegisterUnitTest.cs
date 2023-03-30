@@ -22,6 +22,16 @@ public class RegisterUnitTest
 
         var url = new Uri(apiUrl, $"/api/login");
 
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+            ["iscreate"] = 1.ToString(),
+            ["currency"] = currency,
+            ["clienttype"] = clientType.ToString(),
+            ["language"] = languageId.ToString(),
+        };
+
         var response = new
         {
             result = 0,
@@ -34,6 +44,8 @@ public class RegisterUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

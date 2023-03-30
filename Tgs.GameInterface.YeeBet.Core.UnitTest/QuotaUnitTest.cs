@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
 using RichardSzalay.MockHttp;
 
@@ -17,6 +18,9 @@ public class QuotaUnitTest
         var fakeLog = NullLogger<GameApiClient>.Instance;
 
         var url = new Uri(apiUrl, $"api/quota/list");
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        query["appid"] = appId;
 
         var response = new
         {
@@ -63,6 +67,7 @@ public class QuotaUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
+            .WithQueryString(query.ToString())
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();

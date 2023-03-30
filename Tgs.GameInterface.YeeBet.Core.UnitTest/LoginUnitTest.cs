@@ -20,6 +20,16 @@ public class LoginUnitTest
         var fakeLog = NullLogger<GameApiClient>.Instance;
 
         var url = new Uri(apiUrl, $"/api/login");
+
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+            ["iscreate"] = 0.ToString(),
+            ["clienttype"] = clientType.ToString(),
+            ["language"] = languageId.ToString(),
+        };
+
         var gameUrl = "http://yibo.98kbus.top/direct/login/MTY3OTk3MDc0Ml8zMDBfMzI5NTY4XzNBM0YyNQ==?d=5&l=2";
 
         var response = new
@@ -34,6 +44,8 @@ public class LoginUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
