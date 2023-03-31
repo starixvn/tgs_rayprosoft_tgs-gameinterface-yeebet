@@ -202,15 +202,17 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
                 {
                     ExternalRoundId = result.ExternalRoundId,
                     ExternalGameId = result.ExternalGameId,
+                    PlayerCode = result.PlayerCode,
                     ExternalCreatedOn = result.ExternalCreatedOn.ToTimestamp(),
                     ExternalClosedOn = result.ExternalClosedOn.ToTimestamp(),
-                    PlayerCode = result.PlayerCode,
                     Bet = result.Bet,
-                    Settle = result.Settle,
                     ValidBet = result.ValidBet,
+                    Settle = result.Settle,
                     Turnover = result.Turnover,
                     WinLoss = result.PlayerWinLoss,
                     AdditionalData = result.AdditionalData,
+                    IsClosed = result.IsClosed,
+                    IsVoid = result.IsVoid,
                 });
             }
         }

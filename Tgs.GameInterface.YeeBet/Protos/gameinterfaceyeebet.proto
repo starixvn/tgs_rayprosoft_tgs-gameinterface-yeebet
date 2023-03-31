@@ -123,4 +123,6 @@ message GameRecordInfo {
 	phoenix.protobuf.DecimalValue turnover = 9;
 	phoenix.protobuf.DecimalValue win_loss = 10;
 	string additional_data = 11;
+	bool is_closed = 12;
+	bool is_void = 13;
 }

@@ -39,19 +39,19 @@ internal class GameRecordQueryService : IQueryService<GameRecordQuery, GameRecor
             }
 
             yield return new GameRecordResult(
-                PlayerCode: bettingHistoryBet.PlayerCode,
                 ExternalRoundId: bettingHistoryBet.ExternalRoundId,
-                IsClosed: bettingHistoryBet.IsClosed,
-                IsVoid: bettingHistoryBet.IsVoid,
+                ExternalGameId: bettingHistoryBet.ExternalGameId,
+                PlayerCode: bettingHistoryBet.PlayerCode,
                 ExternalCreatedOn: bettingHistoryBet.ExternalCreatedOn,
                 ExternalClosedOn: bettingHistoryBet.ExternalClosedOn,
                 Bet: bettingHistoryBet.Bet,
                 ValidBet: bettingHistoryBet.ValidBet,
-                PlayerWinLoss: bettingHistoryBet.WinLoss,
-                Turnover: bettingHistoryBet.ValidBet,
                 Settle: Settle,
+                Turnover: bettingHistoryBet.ValidBet,
+                PlayerWinLoss: bettingHistoryBet.WinLoss,
                 AdditionalData: bettingHistoryBet.AdditionalData,
-                ExternalGameId: bettingHistoryBet.ExternalGameId);
+                IsClosed: bettingHistoryBet.IsClosed,
+                IsVoid: bettingHistoryBet.IsVoid);
         }
     }
 }

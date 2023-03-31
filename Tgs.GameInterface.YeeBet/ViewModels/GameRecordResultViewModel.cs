@@ -11,4 +11,6 @@ public record GameRecordResultViewModel(
     decimal Settle,
     decimal Turnover,
     decimal WinLoss,
-    string AdditionalData);
+    string AdditionalData,
+    bool IsClosed,
+    bool IsVoid);

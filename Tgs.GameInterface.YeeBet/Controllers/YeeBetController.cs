@@ -300,7 +300,9 @@ public class YeeBetController : ControllerBase
                 Settle: result.Settle,
                 Turnover: result.Turnover,
                 WinLoss: result.PlayerWinLoss,
-                AdditionalData: result.AdditionalData);
+                AdditionalData: result.AdditionalData,
+                IsClosed: result.IsClosed,
+                IsVoid: result.IsVoid);
         }
     }
 
@@ -332,7 +334,7 @@ public class YeeBetController : ControllerBase
                 source.AppId,
                 source.SecretKey,
                 source.ExternalRoundIds),
-            cancellationToken: HttpContext.RequestAborted);    
+            cancellationToken: HttpContext.RequestAborted);
 
     /// <summary>
     /// Funds the status asynchronous.
