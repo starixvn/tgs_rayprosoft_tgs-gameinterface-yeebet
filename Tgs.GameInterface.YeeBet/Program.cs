@@ -3,9 +3,8 @@ using System.Net.Mime;
 using System.Net.Sockets;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Instrumentation.AspNetCore;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Tgs.GameInterface.YeeBet;
@@ -78,44 +77,35 @@ builder.Services.AddGameInterfaceCore(
         ?? Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(ip => ip.AddressFamily == AddressFamily.InterNetwork).Single().ToString();
     });
 
-builder.Services
-    .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
-        sp => new ConfigureNamedOptions<OtlpExporterOptions>(
-            Options.DefaultName,
-            exporterOptions =>
-            {
-                var config = sp.GetRequiredService<IConfiguration>();
-                var nodeIp = config.GetValue<string>("NODE_IP");
-
-                if (!string.IsNullOrWhiteSpace(nodeIp))
-                    exporterOptions.Endpoint = new Uri($"http://{nodeIp}:4317");
-
-                config.GetSection("Opentelemetry:Tracing").Bind(exporterOptions);
-            }))
-    .AddOpenTelemetryTracing(traceBuilder => traceBuilder
-        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector())
+builder.Services       
+    .AddOpenTelemetry()
+    .WithTracing(builder => builder
+        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+            .AddEnvironmentVariableDetector())
         .AddSource("Tgs.*")
         .AddSource("TGS.*")
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
-        .AddProfileViewExporter()
+        .AddGrpcClientInstrumentation()
+        .AddGrpcCoreInstrumentation()
+        .AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
         .AddOtlpExporter())
-    .AddProfileViewer()
-    .Configure<AspNetCoreInstrumentationOptions>(options =>
-    {
-        options.Filter = httpContext =>
-        {
-            return !httpContext.Request.Path.HasValue
-                   || !httpContext.Request.Path.StartsWithSegments("/swagger")
-                   && !httpContext.Request.Path.StartsWithSegments("/healthz")
-                   && !httpContext.Request.Path.StartsWithSegments("/profiler/")
-                   && !httpContext.Request.Path.StartsWithSegments("/metrics")
-                   && !new[] { "html", "ico", "png", "jpg" }.Any(
-                       ext => httpContext.Request.Path.Value.EndsWith($".{ext}"));
-        };
-    });
-
-builder.Services
+    .WithMetrics(meterBuiler => meterBuiler
+    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+    .AddEnvironmentVariableDetector())
+    .AddRuntimeInstrumentation()
+    .AddAspNetCoreInstrumentation()
+    .AddOtlpExporter())
+    .Services
+    .Configure<AspNetCoreInstrumentationOptions>(options => options.Filter =
+        httpContext => !httpContext.Request.Path.HasValue
+            || !httpContext.Request.Path.StartsWithSegments("/swagger")
+            && !httpContext.Request.Path.StartsWithSegments("/healthz")
+            && !httpContext.Request.Path.StartsWithSegments("/profiler/")
+            && !httpContext.Request.Path.StartsWithSegments("/hangfire")
+            && !httpContext.Request.Path.StartsWithSegments("/metrics")
+            && !new[] { "html", "ico", "png", "jpg" }.Any(
+                ext => httpContext.Request.Path.Value.EndsWith($".{ext}")))
     .AddInterceptionService()
     .AddServiceUtiltiyInterceptors();
 
@@ -133,8 +123,6 @@ _ = app.UseHttpsRedirection();
 _ = app.UseAuthorization();
 
 _ = app.MapControllers();
-
-app.MapProfileViewer();
 
 app.MapHealthChecks("/healthz");
 
