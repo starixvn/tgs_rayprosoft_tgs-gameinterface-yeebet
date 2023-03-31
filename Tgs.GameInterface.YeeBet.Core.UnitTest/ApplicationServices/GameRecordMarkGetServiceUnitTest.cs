@@ -3,7 +3,7 @@ using Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
-public class GameHistoryMarkGetServiceUnitTest
+public class GameRecordMarkGetServiceUnitTest
 {
     [Fact]
     public async Task Normal_Process()
