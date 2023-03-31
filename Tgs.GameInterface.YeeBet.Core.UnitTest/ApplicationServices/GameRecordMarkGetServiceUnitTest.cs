@@ -28,8 +28,7 @@ public class GameRecordMarkGetServiceUnitTest
                 Arg.Is(query.ApiUrl),
                 Arg.Is(query.AppId),
                 Arg.Is(query.SecretKey),
-                Arg.Is(query.ExternalRoundIds),
-                Arg.Any<CancellationToken>())
+                Arg.Is(query.ExternalRoundIds))
             .ConfigureAwait(false);
     }
 }

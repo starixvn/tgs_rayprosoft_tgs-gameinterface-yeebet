@@ -38,8 +38,7 @@ public class FundOutGetServiceUnitTest
                  Arg.Is(query.SecretKey),
                  Arg.Is(query.PlayerCode),
                  Arg.Is(trsId),
-                 Arg.Is(query.Amount),
-                 Arg.Any<CancellationToken>())
+                 Arg.Is(query.Amount))
              .Returns(result);
 
         var sut = new FundOutGetService(

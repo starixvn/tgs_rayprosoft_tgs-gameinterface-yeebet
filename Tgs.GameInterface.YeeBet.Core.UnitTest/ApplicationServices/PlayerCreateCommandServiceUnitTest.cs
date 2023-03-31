@@ -34,8 +34,7 @@ public class PlayerCreateCommandServiceUnitTest
                Arg.Is(command.ClientType),
                Arg.Is(command.Currency),
                Arg.Is(command.LanguageId),
-               Arg.Is(command.PlayerCode),
-               Arg.Any<CancellationToken>())
+               Arg.Is(command.PlayerCode))
            .ConfigureAwait(false);
     }
 }
