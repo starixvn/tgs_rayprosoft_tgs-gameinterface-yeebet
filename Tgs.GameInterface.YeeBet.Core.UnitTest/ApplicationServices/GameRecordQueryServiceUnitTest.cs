@@ -4,7 +4,7 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
-public class GameRecordHistoryQueryUnitTest
+public class GameRecordQueryServiceUnitTest
 {
     [Fact]
     public async Task Normal_Process()
