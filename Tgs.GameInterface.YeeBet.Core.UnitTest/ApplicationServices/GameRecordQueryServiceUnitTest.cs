@@ -31,8 +31,7 @@ public class GameRecordQueryServiceUnitTest
                  Arg.Is(query.ApiUrl),
                  Arg.Is(query.AppId),
                  Arg.Is(query.SecretKey),
-                 Arg.Is(query.Size),
-                 Arg.Any<CancellationToken>())
+                 Arg.Is(query.Size))
             .ToArrayAsync()
             .ConfigureAwait(false)
             ?? Enumerable.Empty<BetResult>();

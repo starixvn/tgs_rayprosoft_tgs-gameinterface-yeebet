@@ -28,8 +28,7 @@ public class PlayerLogoutCommandServiceUnitTest
                Arg.Is(command.ApiUrl),
                Arg.Is(command.AppId),
                Arg.Is(command.SecretKey),
-               Arg.Is(command.PlayerCode),
-               Arg.Any<CancellationToken>())
+               Arg.Is(command.PlayerCode))
            .ConfigureAwait(false);
     }
 }

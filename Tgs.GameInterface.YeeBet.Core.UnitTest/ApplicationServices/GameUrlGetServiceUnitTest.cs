@@ -32,8 +32,7 @@ public class GameUrlGetServiceUnitTest
                 Arg.Is(query.SecretKey),
                 Arg.Is(query.ClientType),
                 Arg.Is(query.LanguageId),
-                Arg.Is(query.PlayerCode),
-                Arg.Any<CancellationToken>())
+                Arg.Is(query.PlayerCode))
             .ConfigureAwait(false);
     }
 }

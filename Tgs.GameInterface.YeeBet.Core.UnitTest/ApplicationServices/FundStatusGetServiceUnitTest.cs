@@ -23,8 +23,7 @@ public class FundStatusGetServiceUnitTest
                  Arg.Is(query.AppId),
                  Arg.Is(query.SecretKey),
                  Arg.Is(query.PlayerCode),
-                 Arg.Is(query.TrsId.ToString()),
-                 Arg.Any<CancellationToken>())
+                 Arg.Is(query.TrsId.ToString()))
              .Returns(true);
 
         var sut = new FundStatusGetService(fakeGameApiClient);
