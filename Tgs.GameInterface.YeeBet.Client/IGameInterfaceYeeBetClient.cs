@@ -65,7 +65,6 @@ public interface IGameInterfaceYeeBetClient
        Uri apiUrl,
        string appId,
        string secretKey,
-       string playerCode,
        int size,
        CancellationToken cancellationToken = default);
 

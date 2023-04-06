@@ -79,7 +79,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             .ConfigureAwait(false);
     }
 
-    public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(Uri apiUrl, string appId, string secretKey, string playerCode, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(Uri apiUrl, string appId, string secretKey, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var reply = await _client
             .GameRecordAsync(
