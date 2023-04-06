@@ -118,6 +118,9 @@ internal class GameApiClient : IGameApiClient
         if (result < 0)
             throw new Exception($"The game provider responded with an error.({result})");
 
+        if (jsonNode["array"] is null)
+            yield break;
+
         var array = jsonNode!["array"]!.AsArray();
 
         if (array is null || !array.Any())
