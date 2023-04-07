@@ -6,9 +6,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class BalanceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 查詢餘額成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -49,11 +50,11 @@ public class BalanceUnitTest
             .BalanceAsync(apiUrl, appId, secretKey, username)
             .ConfigureAwait(false);
 
-        Assert.Equal(10950M, actual.Balance);
-        Assert.True(actual.IsPlayerExist);
+        Assert.AreEqual(10950M, actual.Balance);
+        Assert.IsTrue(actual.IsPlayerExist);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task 玩家不存在()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -94,7 +95,7 @@ public class BalanceUnitTest
             .BalanceAsync(apiUrl, appId, secretKey, username)
             .ConfigureAwait(false);
 
-        Assert.Equal(0M, actual.Balance);
-        Assert.False(actual.IsPlayerExist);
+        Assert.AreEqual(0M, actual.Balance);
+        Assert.IsFalse(actual.IsPlayerExist);
     }
 }

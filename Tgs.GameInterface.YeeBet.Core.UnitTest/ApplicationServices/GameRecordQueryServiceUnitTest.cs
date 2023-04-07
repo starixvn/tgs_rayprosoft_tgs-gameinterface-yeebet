@@ -4,9 +4,10 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class GameRecordQueryServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();

@@ -6,9 +6,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class BetsDetailUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 查詢遊戲紀錄成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -79,7 +80,7 @@ public class BetsDetailUnitTest
             .BetsDetailAsync(apiUrl, appId, secretKey, beginTime, endTime, pageSize, pageIndex)
             .ConfigureAwait(false);
 
-        Assert.NotNull(actual);
-        Assert.True(actual.Data.Any());
+        Assert.IsNotNull(actual);
+        Assert.IsTrue(actual.Data.Any());
     }
 }

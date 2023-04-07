@@ -3,9 +3,10 @@ using Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class PlayerLogoutCommandServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();

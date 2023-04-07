@@ -1,8 +1,9 @@
 ﻿namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class YeeBetHasherUnitTest
 {
-    [Fact]
+    [TestMethod]
     public void Balance()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -15,10 +16,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("298511c51d785332d8d279998b79cd3c", actual);
+        Assert.AreEqual("298511c51d785332d8d279998b79cd3c", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void Deposit()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -33,10 +34,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("7c410904c635f4681b10dace21a7b014", actual);
+        Assert.AreEqual("7c410904c635f4681b10dace21a7b014", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void Withdraw()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -51,10 +52,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("b1989cd38e839a9c93158a89a003d9b8", actual);
+        Assert.AreEqual("b1989cd38e839a9c93158a89a003d9b8", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void DepositWithdrawHistory()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -70,10 +71,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("265df11a021a872e86399265f4af6b2c", actual);
+        Assert.AreEqual("265df11a021a872e86399265f4af6b2c", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void GetBets()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -86,10 +87,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("192f7ba5aab1da971b91556ce2ba8784", actual);
+        Assert.AreEqual("192f7ba5aab1da971b91556ce2ba8784", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void Kickout()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -102,10 +103,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("fcf19903e7959335c56046c0e0df20a4", actual);
+        Assert.AreEqual("fcf19903e7959335c56046c0e0df20a4", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void Login()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -121,10 +122,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("160a478852a780e92d338615b52b8f12", actual);
+        Assert.AreEqual("160a478852a780e92d338615b52b8f12", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void Quota()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -136,10 +137,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("115263331acd6896865a42beef8c710e", actual);
+        Assert.AreEqual("115263331acd6896865a42beef8c710e", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void Register()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -156,10 +157,10 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("e9d5dfbbb6e100bd92fc2bdb3710ad40", actual);
+        Assert.AreEqual("e9d5dfbbb6e100bd92fc2bdb3710ad40", actual);
     }
 
-    [Fact]
+    [TestMethod]
     public void RemoveBets()
     {
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
@@ -172,6 +173,6 @@ public class YeeBetHasherUnitTest
 
         var actual = YeeBetHasher.ComputeHash(dict, secretKey);
 
-        Assert.Equal("306b39a751e9972416992204a7d24a03", actual);
+        Assert.AreEqual("306b39a751e9972416992204a7d24a03", actual);
     }
 }

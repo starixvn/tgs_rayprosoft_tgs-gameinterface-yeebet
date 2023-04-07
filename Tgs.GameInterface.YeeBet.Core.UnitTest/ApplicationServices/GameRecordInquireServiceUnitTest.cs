@@ -4,9 +4,10 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class GameRecordInquireServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
@@ -52,8 +53,8 @@ public class GameRecordInquireServiceUnitTest
             .GetAsync(query)
                     .ConfigureAwait(false);
 
-        Assert.Equal(2, actual.Total);
-        Assert.Equal(1, actual.ArraySize);
-        Assert.True(actual.Data.Any());
+        Assert.AreEqual(2, actual.Total);
+        Assert.AreEqual(1, actual.ArraySize);
+        Assert.IsTrue(actual.Data.Any());
     }
 }

@@ -4,9 +4,10 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class PlayerBalanceGetServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
@@ -32,8 +33,8 @@ public class PlayerBalanceGetServiceUnitTest
             .GetAsync(query)
             .ConfigureAwait(false);
 
-        Assert.NotNull(actual);
-        Assert.True(actual.IsPlayerExist);
-        Assert.Equal(11000.0M, actual.Balance);
+        Assert.IsNotNull(actual);
+        Assert.IsTrue(actual.IsPlayerExist);
+        Assert.AreEqual(11000.0M, actual.Balance);
     }
 }

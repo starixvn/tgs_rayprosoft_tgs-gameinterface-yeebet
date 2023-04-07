@@ -5,9 +5,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class KickOutUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 玩家登出成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -49,7 +50,7 @@ public class KickOutUnitTest
             .ConfigureAwait(false);
     }
 
-    [Fact]
+    [TestMethod]
     public void 玩家登出失敗()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -86,7 +87,7 @@ public class KickOutUnitTest
 
         var sut = new GameApiClient(fakeLog, fakeHttpClient);
 
-        _ = Assert.ThrowsAsync<Exception>(async () => await sut
+        _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .KickOutAsync(apiUrl, appId, secretKey, username)
             .ConfigureAwait(false));
     }

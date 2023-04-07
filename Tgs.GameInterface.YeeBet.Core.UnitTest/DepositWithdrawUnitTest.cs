@@ -5,9 +5,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class DepositWithdrawUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 存款成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -55,11 +56,11 @@ public class DepositWithdrawUnitTest
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, tradeNo, amount)
             .ConfigureAwait(false);
 
-        Assert.Equal(11000M, actual.Balance);
-        Assert.Equal(tradeNo.ToString(), actual.OrderNo);
+        Assert.AreEqual(11000M, actual.Balance);
+        Assert.AreEqual(tradeNo.ToString(), actual.OrderNo);
     }
 
-    [Fact]
+    [TestMethod]
     public void 存款失敗_訂單號重複()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -103,12 +104,12 @@ public class DepositWithdrawUnitTest
 
         var sut = new GameApiClient(fakeLog, fakeHttpClient);
 
-        _ = Assert.ThrowsAsync<Exception>(async () => await sut
+        _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, tradeNo, amount)
             .ConfigureAwait(false));
     }
 
-    [Fact]
+    [TestMethod]
     public async Task 提款成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -156,11 +157,11 @@ public class DepositWithdrawUnitTest
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, tradeNo, amount)
             .ConfigureAwait(false);
 
-        Assert.Equal(10950.0M, actual.Balance);
-        Assert.Equal(tradeNo.ToString(), actual.OrderNo);
+        Assert.AreEqual(10950.0M, actual.Balance);
+        Assert.AreEqual(tradeNo.ToString(), actual.OrderNo);
     }
 
-    [Fact]
+    [TestMethod]
     public void 提款失敗()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -203,7 +204,7 @@ public class DepositWithdrawUnitTest
 
         var sut = new GameApiClient(fakeLog, fakeHttpClient);
 
-        _ = Assert.ThrowsAsync<Exception>(async () => await sut
+        _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, long.MinValue, amount)
             .ConfigureAwait(false));
     }
