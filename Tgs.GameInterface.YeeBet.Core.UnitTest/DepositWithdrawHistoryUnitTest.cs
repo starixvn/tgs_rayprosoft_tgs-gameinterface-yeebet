@@ -6,9 +6,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class DepositWithdrawHistoryUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 有存取款紀錄()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -52,10 +53,10 @@ public class DepositWithdrawHistoryUnitTest
             .DepositWithdrawHistoryAsync(apiUrl, appId, secretKey, username, tradeNo.ToString())
             .ConfigureAwait(false);
 
-        Assert.True(actual);
+        Assert.IsTrue(actual);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task 無存取款紀錄()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -99,6 +100,6 @@ public class DepositWithdrawHistoryUnitTest
             .DepositWithdrawHistoryAsync(apiUrl, appId, secretKey, username, tradeNo.ToString())
             .ConfigureAwait(false);
 
-        Assert.False(actual);
+        Assert.IsFalse(actual);
     }
 }

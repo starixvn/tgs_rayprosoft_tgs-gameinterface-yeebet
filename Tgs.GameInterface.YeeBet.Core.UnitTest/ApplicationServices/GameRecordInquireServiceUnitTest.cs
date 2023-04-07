@@ -4,9 +4,10 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class GameRecordInquireServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
@@ -20,26 +21,40 @@ public class GameRecordInquireServiceUnitTest
             PageSize: 1000,
             PageIndex: 0);
 
+        var result = new BetsDetailResult
+        {
+            Total = 2,
+            ArraySize = 1,
+            Data = new BetDetailResult[]
+            {
+                new BetDetailResult(
+                    ExternalRoundId: "893018",
+                    ExternalGameId: "3006",
+                    PlayerCode: "4ucmqplxb029",
+                    ExternalCreatedOn: new DateTimeOffset(2023,04,07,15,15,28,TimeSpan.FromHours(+8)),
+                    ExternalClosedOn:  new DateTimeOffset(2023,04,07,15,15,28,TimeSpan.FromHours(+8)),
+                    Bet: 50,
+                    ValidBet: 50,
+                    TurnOver: 50,
+                    WinLoss: -50,
+                    AdditionalData: "",
+                    IsVoid: false,
+                    IsClosed: true)
+            }
+        };
+
+        _ = fakeGameApiClient
+            .BetsDetailAsync(query.ApiUrl, query.AppId, query.SecretKey, query.BeginTime, query.EndTime, query.PageSize, query.PageIndex)
+                    .Returns(result);
+
         var sut = new GameRecordInquireService(fakeGameApiClient);
 
-        _ = await sut
-            .QueryAsync(query)
-            .ToArrayAsync()
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordInfo>();
+        var actual = await sut
+            .GetAsync(query)
+                    .ConfigureAwait(false);
 
-        _ = await fakeGameApiClient
-            .Received(1)
-            .BetsDetailAsync(
-                 Arg.Is(query.ApiUrl),
-                 Arg.Is(query.AppId),
-                 Arg.Is(query.SecretKey),
-                 Arg.Is(query.BeginTime),
-                 Arg.Is(query.EndTime),
-                 Arg.Is(query.PageSize),
-                 Arg.Is(query.PageIndex))
-            .ToArrayAsync()
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<BetDetailResult>();
+        Assert.AreEqual(2, actual.Total);
+        Assert.AreEqual(1, actual.ArraySize);
+        Assert.IsTrue(actual.Data.Any());
     }
 }

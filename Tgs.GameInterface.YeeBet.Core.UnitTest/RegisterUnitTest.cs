@@ -5,9 +5,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class RegisterUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 創建玩家成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");

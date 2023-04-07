@@ -394,8 +394,8 @@ public class YeeBetController : ControllerBase
     ///         }
     /// </remarks>
     [HttpPost("game/record/history/inquire", Name = "GameRecordInquire")]
-    public async IAsyncEnumerable<GameRecordInfoViewModel> GameRecordInquireAsync(
-        [FromServices] IQueryService<GameRecordInquire, GameRecordInfo> service,
+    public async ValueTask<GameRecordInquireResultViewModel> GameRecordInquireAsync(
+        [FromServices] IGetService<GameRecordInquire, GameRecordInquireResult> service,
         GameRecordInquireViewModel source)
     {
         var query = new GameRecordInquire(
@@ -408,22 +408,16 @@ public class YeeBetController : ControllerBase
             PageIndex: source.PageIndex);
 
         var results = await service
-            .QueryAsync(
+            .GetAsync(
                 query: query,
                 cancellationToken: HttpContext.RequestAborted)
-            .ToArrayAsync(
-                cancellationToken: HttpContext.RequestAborted)
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordInfo>();
+            .ConfigureAwait(false);
 
-        if (!results.Any())
+        return new GameRecordInquireResultViewModel
         {
-            yield break;
-        }
-
-        foreach (var result in results)
-        {
-            yield return new GameRecordInfoViewModel(
+            Total = results.Total,
+            ArraySize = results.ArraySize,
+            Data = results.Data.Select(result => new GameRecordInfoViewModel(
                 ExternalRoundId: result.ExternalRoundId,
                 ExternalGameId: result.ExternalGameId,
                 PlayerCode: result.PlayerCode,
@@ -436,7 +430,7 @@ public class YeeBetController : ControllerBase
                 WinLoss: result.PlayerWinLoss,
                 AdditionalData: result.AdditionalData,
                 IsClosed: result.IsClosed,
-                IsVoid: result.IsVoid);
-        }
+                IsVoid: result.IsVoid))
+        };
     }
 }

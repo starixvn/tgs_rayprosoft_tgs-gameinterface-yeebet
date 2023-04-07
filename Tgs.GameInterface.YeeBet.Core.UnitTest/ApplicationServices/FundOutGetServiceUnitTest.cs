@@ -5,9 +5,10 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class FundOutGetServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeLog = NullLogger<FundOutGetService>.Instance;
@@ -50,7 +51,7 @@ public class FundOutGetServiceUnitTest
             .GetAsync(query)
             .ConfigureAwait(false);
 
-        Assert.NotNull(actual);
-        Assert.Equal(trsId.ToString(), actual.TransactionId);
+        Assert.IsNotNull(actual);
+        Assert.AreEqual(trsId.ToString(), actual.TransactionId);
     }
 }

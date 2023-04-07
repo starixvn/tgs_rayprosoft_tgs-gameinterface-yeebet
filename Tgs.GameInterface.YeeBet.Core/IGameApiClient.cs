@@ -22,5 +22,5 @@ public interface IGameApiClient
 
     public ValueTask<bool> DepositWithdrawHistoryAsync(Uri apiUrl, string appId, string secretKey, string username, string tradeno, CancellationToken cancellationToken = default);
 
-    public IAsyncEnumerable<BetDetailResult> BetsDetailAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex = 0, CancellationToken cancellationToken = default);
+    public ValueTask<BetsDetailResult> BetsDetailAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex = 0, CancellationToken cancellationToken = default);
 }

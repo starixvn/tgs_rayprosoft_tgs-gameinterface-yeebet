@@ -1,9 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using Tgs.ServiceUtility;
+﻿using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-internal class GameRecordInquireService : IQueryService<GameRecordInquire, GameRecordInfo>
+internal class GameRecordInquireService : IGetService<GameRecordInquire, GameRecordInquireResult>
 {
     private readonly IGameApiClient _client;
 
@@ -12,9 +11,9 @@ internal class GameRecordInquireService : IQueryService<GameRecordInquire, GameR
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async IAsyncEnumerable<GameRecordInfo> QueryAsync(GameRecordInquire query, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async ValueTask<GameRecordInquireResult> GetAsync(GameRecordInquire query, CancellationToken cancellationToken = default)
     {
-        var bettingHistoryBets = await _client
+        var betsResult = await _client
             .BetsDetailAsync(
                 apiUrl: query.ApiUrl,
                 appId: query.AppId,
@@ -24,23 +23,13 @@ internal class GameRecordInquireService : IQueryService<GameRecordInquire, GameR
                 pageSize: query.PageSize,
                 pageIndex: query.PageIndex,
                 cancellationToken: cancellationToken)
-            .ToArrayAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        if (!bettingHistoryBets.Any())
+        return new GameRecordInquireResult
         {
-            yield break;
-        }
-
-        foreach (var bettingHistoryBet in bettingHistoryBets)
-        {
-            var Settle = 0.0m;
-            if (bettingHistoryBet.IsClosed && !bettingHistoryBet.IsVoid)
-            {
-                Settle = bettingHistoryBet.WinLoss + bettingHistoryBet.Bet;
-            }
-
-            yield return new GameRecordInfo(
+            Total = betsResult.Total,
+            ArraySize = betsResult.ArraySize,
+            Data = betsResult.Data.Select(bettingHistoryBet => new GameRecordInfo(
                 ExternalRoundId: bettingHistoryBet.ExternalRoundId,
                 ExternalGameId: bettingHistoryBet.ExternalGameId,
                 PlayerCode: bettingHistoryBet.PlayerCode,
@@ -48,12 +37,14 @@ internal class GameRecordInquireService : IQueryService<GameRecordInquire, GameR
                 ExternalClosedOn: bettingHistoryBet.ExternalClosedOn,
                 Bet: bettingHistoryBet.Bet,
                 ValidBet: bettingHistoryBet.ValidBet,
-                Settle: Settle,
+                Settle: bettingHistoryBet.IsClosed && !bettingHistoryBet.IsVoid
+                    ? bettingHistoryBet.WinLoss + bettingHistoryBet.Bet
+                    : 0.0m,
                 Turnover: bettingHistoryBet.ValidBet,
                 PlayerWinLoss: bettingHistoryBet.WinLoss,
                 AdditionalData: bettingHistoryBet.AdditionalData,
                 IsClosed: bettingHistoryBet.IsClosed,
-                IsVoid: bettingHistoryBet.IsVoid);
-        }
+                IsVoid: bettingHistoryBet.IsVoid))
+        };
     }
 }

@@ -6,9 +6,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class RemoveBetsUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 移除遊戲紀錄成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -46,6 +47,6 @@ public class RemoveBetsUnitTest
             .RemoveBetsAsync(apiUrl, appId, secretKey, ids)
             .ConfigureAwait(false);
 
-        Assert.True(actual);
+        Assert.IsTrue(actual);
     }
 }

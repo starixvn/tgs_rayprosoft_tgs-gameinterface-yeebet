@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using Google.Protobuf.WellKnownTypes;
 using Tgs.GameInterface.YeeBet.Protos;
 
 namespace Tgs.GameInterface.YeeBet.Client;
@@ -58,29 +59,24 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
         return reply.State;
     }
 
-    public async IAsyncEnumerable<GameRecordInfo> GameRecordInquireAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async ValueTask<GameRecordInfoReply> GameRecordInquireAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex, CancellationToken cancellationToken = default)
     {
         var reply = await _client
             .GameRecordInquireAsync(
                 request: new GameRecordInquireRequest
                 {
                     ApiUrl = apiUrl.ToString(),
+                    AppId = appId,
+                    SecretKey = secretKey,
+                    BeginTime = beginTime.ToTimestamp(),
+                    EndTime = endTime.ToTimestamp(),
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
                 },
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        var gameRecords = reply.Items
-            ?? Enumerable.Empty<GameRecordInfo>();
-
-        if (!gameRecords.Any())
-        {
-            yield break;
-        }
-
-        foreach (var gameRecord in gameRecords)
-        {
-            yield return gameRecord;
-        }
+        return reply;
     }
 
     public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(Uri apiUrl, string appId, string secretKey, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)

@@ -138,5 +138,7 @@ message GameRecordInfo {
 }
 
 message GameRecordInfoReply{
-	repeated GameRecordInfo items = 1;
+	int32 total = 1;
+	int32 array_size = 2;
+	repeated GameRecordInfo items = 3;
 }

@@ -45,7 +45,7 @@ internal class GameApiClient : IGameApiClient
         return new BalanceResult(true, balance);
     }
 
-    public async IAsyncEnumerable<BetDetailResult> BetsDetailAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex = 0, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async ValueTask<BetsDetailResult> BetsDetailAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex = 0, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -67,31 +67,45 @@ internal class GameApiClient : IGameApiClient
             throw new Exception($"The game provider responded with an error.({result})");
 
         if (jsonNode["array"] is null)
-            yield break;
-
+        {
+            _logger.LogInformation("bets detail is null");
+            return new BetsDetailResult
+            {
+                Total = 0,
+                ArraySize = 0
+            };
+        }
         var array = jsonNode!["array"]!.AsArray();
 
         if (array is null || !array.Any())
-            yield break;
-
-        foreach (var item in array)
         {
-            var state = item!["state"]!.GetValue<int>();
+            return new BetsDetailResult
+            {
+                Total = 0,
+                ArraySize = 0
+            };
+        }
 
-            yield return new BetDetailResult(
-                ExternalRoundId: item!["id"]!.ToString(),
+        var total = jsonNode!["total"]!.GetValue<int>();
+        var arraySize = jsonNode!["arraysize"]!.GetValue<int>();
+
+        return new BetsDetailResult
+        {
+            Total = total,
+            ArraySize = arraySize,
+            Data = array.Select(item => new BetDetailResult(ExternalRoundId: item!["id"]!.ToString(),
                 ExternalGameId: item!["gameid"]!.ToString(),
                 PlayerCode: item!["username"]!.ToString(),
-                ExternalCreatedOn: new DateTimeOffset( DateTime.Parse(item!["createtime"]!.ToString()), TimeSpan.FromHours(+8)),
+                ExternalCreatedOn: new DateTimeOffset(DateTime.Parse(item!["createtime"]!.ToString()), TimeSpan.FromHours(+8)),
                 ExternalClosedOn: new DateTimeOffset(DateTime.Parse(item!["updatetime"]!.ToString()), TimeSpan.FromHours(+8)),
                 Bet: item!["betamount"]!.GetValue<decimal>(),
                 ValidBet: item!["commamount"]!.GetValue<decimal>(),
                 TurnOver: item!["commamount"]!.GetValue<decimal>(),
                 WinLoss: item!["winlost"]!.GetValue<decimal>(),
                 AdditionalData: item.ToJsonString(),
-                IsVoid: state == -1,
-                IsClosed: state == 1);
-        }
+                IsVoid: item!["state"]!.GetValue<int>() == -1,
+                IsClosed: item!["state"]!.GetValue<int>() == 1))
+        };
     }
 
     public async ValueTask<DepositWithdrawResult> DepositWithdrawAsync(Uri apiUrl, string appId, string secretKey, string username, long tradeNo, decimal amount, CancellationToken cancellationToken = default)

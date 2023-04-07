@@ -5,9 +5,10 @@ using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
 
+[TestClass]
 public class LoginUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task 登入遊戲成功()
     {
         var apiUrl = new Uri("http://api.98kbus.top/");
@@ -56,6 +57,6 @@ public class LoginUnitTest
             .LoginAsync(apiUrl, appId, secretKey, clientType, languageId, username)
             .ConfigureAwait(false);
 
-        Assert.Equal(gameUrl, actual);
+        Assert.AreEqual(gameUrl, actual);
     }
 }

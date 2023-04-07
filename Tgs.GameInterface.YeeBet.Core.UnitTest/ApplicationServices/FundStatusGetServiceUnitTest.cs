@@ -3,9 +3,10 @@ using Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
+[TestClass]
 public class FundStatusGetServiceUnitTest
 {
-    [Fact]
+    [TestMethod]
     public async Task Normal_Process()
     {
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
@@ -32,6 +33,6 @@ public class FundStatusGetServiceUnitTest
             .GetAsync(query)
             .ConfigureAwait(false);
 
-        Assert.True(actual);
+        Assert.IsTrue(actual);
     }
 }

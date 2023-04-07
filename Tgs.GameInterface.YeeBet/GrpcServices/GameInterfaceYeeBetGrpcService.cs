@@ -17,7 +17,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
     private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
     private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
     private readonly IGetService<GameRecordMarkQuery, bool> _gameRecordMarkService;
-    private readonly IQueryService<GameRecordInquire, Core.ApplicationServices.GameRecordInfo> _gameRecordInquireService;
+    private readonly IGetService<GameRecordInquire, GameRecordInquireResult> _gameRecordInquireService;
 
     public GameInterfaceYeeBetGrpcService(
         IGetService<FundOutQuery, FundResult> fundOutService,
@@ -29,7 +29,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
         IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
         IGetService<GameRecordMarkQuery, bool> gameRecordMarkService,
-        IQueryService<GameRecordInquire, Core.ApplicationServices.GameRecordInfo> gameRecordInquireService)
+        IGetService<GameRecordInquire, GameRecordInquireResult> gameRecordInquireService)
     {
         _fundOutService = fundOutService;
         _fundInService = fundInService;
@@ -194,15 +194,14 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
             request.PageIndex);
 
         var results = await _gameRecordInquireService
-            .QueryAsync(query, context.CancellationToken)
-            .ToArrayAsync(context.CancellationToken)
+            .GetAsync(query, context.CancellationToken)            
             .ConfigureAwait(false);
 
         var reply = new GameRecordInfoReply();
 
-        if (results.Any())
+        if (results.Data.Any())
         {
-            foreach (var result in results)
+            foreach (var result in results.Data)
             {
                 reply.Items.Add(new Protos.GameRecordInfo
                 {
@@ -222,6 +221,8 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
                 });
             }
         }
+        reply.ArraySize = results.ArraySize;
+        reply.Total = results.Total;
 
         return reply;
     }
