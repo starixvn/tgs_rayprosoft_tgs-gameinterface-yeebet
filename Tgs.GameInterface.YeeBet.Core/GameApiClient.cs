@@ -45,6 +45,55 @@ internal class GameApiClient : IGameApiClient
         return new BalanceResult(true, balance);
     }
 
+    public async IAsyncEnumerable<BetDetailResult> BetsDetailAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex = 0, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            { "appid", appId },
+            { "begintime", beginTime.ToUnixTimeSeconds().ToString() },
+            { "endtime", endTime.ToUnixTimeSeconds().ToString() },
+            { "index", pageIndex.ToString() },
+            { "size", pageSize.ToString() },
+        };
+
+        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        parameters.Add("sign", sign);
+
+        var jsonNode = await GetAsync(apiUrl, "api/record/bets/detail", parameters, "betsdetail", cancellationToken).ConfigureAwait(false);
+
+        var result = jsonNode["result"]!.GetValue<int>();
+
+        if (result < 0)
+            throw new Exception($"The game provider responded with an error.({result})");
+
+        if (jsonNode["array"] is null)
+            yield break;
+
+        var array = jsonNode!["array"]!.AsArray();
+
+        if (array is null || !array.Any())
+            yield break;
+
+        foreach (var item in array)
+        {
+            var state = item!["state"]!.GetValue<int>();
+
+            yield return new BetDetailResult(
+                ExternalRoundId: item!["id"]!.ToString(),
+                ExternalGameId: item!["gameid"]!.ToString(),
+                PlayerCode: item!["username"]!.ToString(),
+                ExternalCreatedOn: new DateTimeOffset( DateTime.Parse(item!["createtime"]!.ToString()), TimeSpan.FromHours(+8)),
+                ExternalClosedOn: new DateTimeOffset(DateTime.Parse(item!["updatetime"]!.ToString()), TimeSpan.FromHours(+8)),
+                Bet: item!["betamount"]!.GetValue<decimal>(),
+                ValidBet: item!["commamount"]!.GetValue<decimal>(),
+                TurnOver: item!["commamount"]!.GetValue<decimal>(),
+                WinLoss: item!["winlost"]!.GetValue<decimal>(),
+                AdditionalData: item.ToJsonString(),
+                IsVoid: state == -1,
+                IsClosed: state == 1);
+        }
+    }
+
     public async ValueTask<DepositWithdrawResult> DepositWithdrawAsync(Uri apiUrl, string appId, string secretKey, string username, long tradeNo, decimal amount, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
@@ -141,7 +190,7 @@ internal class GameApiClient : IGameApiClient
                 TurnOver: item!["commamount"]!.GetValue<decimal>(),
                 WinLoss: item!["winlost"]!.GetValue<decimal>(),
                 AdditionalData: item.ToJsonString(),
-                IsVoid: state == -2,
+                IsVoid: state == -1,
                 IsClosed: state == 1);
         }
     }

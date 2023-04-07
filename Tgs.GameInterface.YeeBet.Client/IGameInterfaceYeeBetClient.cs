@@ -74,4 +74,14 @@ public interface IGameInterfaceYeeBetClient
         string secretKey,
         IEnumerable<string> externalRoundIds,
         CancellationToken cancellationToken = default);
+
+    IAsyncEnumerable<GameRecordInfo> GameRecordInquireAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        DateTimeOffset beginTime,
+        DateTimeOffset endTime,
+        int pageSize,
+        int pageIndex,
+        CancellationToken cancellationToken = default);
 }

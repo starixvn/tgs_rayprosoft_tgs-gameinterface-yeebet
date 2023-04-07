@@ -262,8 +262,8 @@ public class YeeBetController : ControllerBase
     ///             "size": 1000
     ///         }
     /// </remarks>
-    [HttpPost("game/record/history")]
-    public async IAsyncEnumerable<GameRecordResultViewModel> GameRecordHistoryAsync(
+    [HttpPost("game/record/history/query", Name = "GameRecord")]
+    public async IAsyncEnumerable<GameRecordResultViewModel> GameRecordAsync(
         [FromServices] IQueryService<GameRecordQuery, GameRecordResult> service,
         GameRecordViewModel source)
     {
@@ -324,8 +324,8 @@ public class YeeBetController : ControllerBase
     ///             "externalIds": [""]
     ///         }
     /// </remarks>
-    [HttpPost("game/history/mark", Name = "GameHistoryMark")]
-    public ValueTask<bool> GameHistoryMarkAsync(
+    [HttpPost("game/history/mark", Name = "GameRecordMark")]
+    public ValueTask<bool> GameRecordMarkAsync(
         [FromServices] IGetService<GameRecordMarkQuery, bool> service,
         GameHistoryMarkViewModel source)
         => service.GetAsync(
@@ -370,5 +370,73 @@ public class YeeBetController : ControllerBase
         return service.GetAsync(
             query: query,
             cancellationToken: HttpContext.RequestAborted);
+    }
+
+    /// <summary>
+    /// Betses the detail asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///
+    ///         {
+    ///             "apiUrl": "http://api.98kbus.top/",
+    ///             "appId": "xtdA15OTVGEP",
+    ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0",
+    ///             "beginTime": "2023-04-06T08:20:02.868Z",
+    ///             "endTime": "2023-04-06T08:20:02.868Z",
+    ///             "pageSize": 1000,
+    ///             "pageIndex": 0
+    ///         }
+    /// </remarks>
+    [HttpPost("game/record/history/inquire", Name = "GameRecordInquire")]
+    public async IAsyncEnumerable<GameRecordInfoViewModel> GameRecordInquireAsync(
+        [FromServices] IQueryService<GameRecordInquire, GameRecordInfo> service,
+        GameRecordInquireViewModel source)
+    {
+        var query = new GameRecordInquire(
+            ApiUrl: source.ApiUrl,
+            AppId: source.AppId,
+            SecretKey: source.SecretKey,
+            BeginTime: source.BeginTime,
+            EndTime: source.EndTime,
+            PageSize: source.PageSize,
+            PageIndex: source.PageIndex);
+
+        var results = await service
+            .QueryAsync(
+                query: query,
+                cancellationToken: HttpContext.RequestAborted)
+            .ToArrayAsync(
+                cancellationToken: HttpContext.RequestAborted)
+            .ConfigureAwait(false)
+            ?? Enumerable.Empty<GameRecordInfo>();
+
+        if (!results.Any())
+        {
+            yield break;
+        }
+
+        foreach (var result in results)
+        {
+            yield return new GameRecordInfoViewModel(
+                ExternalRoundId: result.ExternalRoundId,
+                ExternalGameId: result.ExternalGameId,
+                PlayerCode: result.PlayerCode,
+                ExternalCreatedOn: result.ExternalCreatedOn,
+                ExternalClosedOn: result.ExternalClosedOn,
+                Bet: result.Bet,
+                ValidBet: result.ValidBet,
+                Settle: result.Settle,
+                Turnover: result.Turnover,
+                WinLoss: result.PlayerWinLoss,
+                AdditionalData: result.AdditionalData,
+                IsClosed: result.IsClosed,
+                IsVoid: result.IsVoid);
+        }
     }
 }
