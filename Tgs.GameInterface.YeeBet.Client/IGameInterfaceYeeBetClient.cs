@@ -75,7 +75,7 @@ public interface IGameInterfaceYeeBetClient
         IEnumerable<string> externalRoundIds,
         CancellationToken cancellationToken = default);
 
-    IAsyncEnumerable<GameRecordInfo> GameRecordInquireAsync(
+    ValueTask<GameRecordInfoReply> GameRecordInquireAsync(
         Uri apiUrl,
         string appId,
         string secretKey,

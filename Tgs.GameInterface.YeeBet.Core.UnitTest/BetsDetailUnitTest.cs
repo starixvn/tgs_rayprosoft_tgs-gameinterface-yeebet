@@ -77,10 +77,9 @@ public class BetsDetailUnitTest
 
         var actual = await sut
             .BetsDetailAsync(apiUrl, appId, secretKey, beginTime, endTime, pageSize, pageIndex)
-            .ToArrayAsync()
             .ConfigureAwait(false);
 
         Assert.NotNull(actual);
-        Assert.True(actual.Any());
+        Assert.True(actual.Data.Any());
     }
 }
