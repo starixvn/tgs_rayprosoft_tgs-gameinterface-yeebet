@@ -19,7 +19,7 @@ service GameInterfaceYeeBet {
   rpc GameUrl (GameUrlRequest) returns (GameUrlReply);
   rpc GameRecord (GameRecordRequest) returns (GameRecordReply);
   rpc GameRecordMark (GameRecordMarkRequest) returns (BaseReply);
-
+  rpc GameRecordInquire (GameRecordInquireRequest) returns (GameRecordInfoReply);
 }
 
 // The request message containing the user's name.
@@ -87,6 +87,16 @@ message GameRecordMarkRequest{
 	repeated string external_round_ids = 4;
 }
 
+message GameRecordInquireRequest {
+	string api_url = 1;
+	string app_id = 2;
+	string secret_key = 3;
+	google.protobuf.Timestamp begin_time = 4;
+	google.protobuf.Timestamp end_time = 5;
+	int32 page_size = 6;
+	int32 page_index = 7;
+}
+
 // The response message containing the greetings.
 message BaseReply {
 	bool state = 1;
@@ -125,4 +135,8 @@ message GameRecordInfo {
 	string additional_data = 11;
 	bool is_closed = 12;
 	bool is_void = 13;
+}
+
+message GameRecordInfoReply{
+	repeated GameRecordInfo items = 1;
 }

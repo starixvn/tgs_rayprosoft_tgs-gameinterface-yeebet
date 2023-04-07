@@ -58,25 +58,29 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
         return reply.State;
     }
 
-    public async ValueTask<BaseReply> GameRecordMarkAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> externalRoundIds, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameRecordInfo> GameRecordInquireAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var request = new GameRecordMarkRequest
-        {
-            ApiUrl = apiUrl.ToString(),
-            AppId = appId,
-            SecretKey = secretKey,
-        };
-
-        foreach (var item in externalRoundIds)
-        {
-            request.ExternalRoundIds.Add(item);
-        }
-
-        return await _client
-            .GameRecordMarkAsync(
-                request: request,
+        var reply = await _client
+            .GameRecordInquireAsync(
+                request: new GameRecordInquireRequest
+                {
+                    ApiUrl = apiUrl.ToString(),
+                },
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
+
+        var gameRecords = reply.Items
+            ?? Enumerable.Empty<GameRecordInfo>();
+
+        if (!gameRecords.Any())
+        {
+            yield break;
+        }
+
+        foreach (var gameRecord in gameRecords)
+        {
+            yield return gameRecord;
+        }
     }
 
     public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(Uri apiUrl, string appId, string secretKey, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -105,6 +109,27 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
         {
             yield return gameRecord;
         }
+    }
+
+    public async ValueTask<BaseReply> GameRecordMarkAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> externalRoundIds, CancellationToken cancellationToken = default)
+    {
+        var request = new GameRecordMarkRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AppId = appId,
+            SecretKey = secretKey,
+        };
+
+        foreach (var item in externalRoundIds)
+        {
+            request.ExternalRoundIds.Add(item);
+        }
+
+        return await _client
+            .GameRecordMarkAsync(
+                request: request,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async ValueTask<string> GameUrlAsync(Uri apiUrl, string appId, string secretKey, string playerCode, int clientType, int languageId, CancellationToken cancellationToken = default)

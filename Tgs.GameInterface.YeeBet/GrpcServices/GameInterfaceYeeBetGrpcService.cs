@@ -17,6 +17,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
     private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
     private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
     private readonly IGetService<GameRecordMarkQuery, bool> _gameRecordMarkService;
+    private readonly IQueryService<GameRecordInquire, Core.ApplicationServices.GameRecordInfo> _gameRecordInquireService;
 
     public GameInterfaceYeeBetGrpcService(
         IGetService<FundOutQuery, FundResult> fundOutService,
@@ -27,7 +28,8 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         ICommandService<PlayerLogoutCommand> playerLogoutService,
         IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
         IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
-        IGetService<GameRecordMarkQuery, bool> gameRecordMarkService)
+        IGetService<GameRecordMarkQuery, bool> gameRecordMarkService,
+        IQueryService<GameRecordInquire, Core.ApplicationServices.GameRecordInfo> gameRecordInquireService)
     {
         _fundOutService = fundOutService;
         _fundInService = fundInService;
@@ -38,6 +40,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
         _gameRecordService = gameRecordService;
         _gameRecordMarkService = gameRecordMarkService;
+        _gameRecordInquireService = gameRecordInquireService ?? throw new ArgumentNullException(nameof(gameRecordInquireService));
     }
 
     public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)
@@ -179,6 +182,50 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         };
     }
 
+    public override async Task<GameRecordInfoReply> GameRecordInquire(GameRecordInquireRequest request, ServerCallContext context)
+    {
+        var query = new GameRecordInquire(
+            new Uri(request.ApiUrl),
+            request.AppId,
+            request.SecretKey,
+            request.BeginTime.ToDateTimeOffset(),
+            request.EndTime.ToDateTimeOffset(),
+            request.PageSize,
+            request.PageIndex);
+
+        var results = await _gameRecordInquireService
+            .QueryAsync(query, context.CancellationToken)
+            .ToArrayAsync(context.CancellationToken)
+            .ConfigureAwait(false);
+
+        var reply = new GameRecordInfoReply();
+
+        if (results.Any())
+        {
+            foreach (var result in results)
+            {
+                reply.Items.Add(new Protos.GameRecordInfo
+                {
+                    ExternalRoundId = result.ExternalRoundId,
+                    ExternalGameId = result.ExternalGameId,
+                    PlayerCode = result.PlayerCode,
+                    ExternalCreatedOn = result.ExternalCreatedOn.ToTimestamp(),
+                    ExternalClosedOn = result.ExternalClosedOn.ToTimestamp(),
+                    Bet = result.Bet,
+                    ValidBet = result.ValidBet,
+                    Settle = result.Settle,
+                    Turnover = result.Turnover,
+                    WinLoss = result.PlayerWinLoss,
+                    AdditionalData = result.AdditionalData,
+                    IsClosed = result.IsClosed,
+                    IsVoid = result.IsVoid,
+                });
+            }
+        }
+
+        return reply;
+    }
+
     public override async Task<GameRecordReply> GameRecord(GameRecordRequest request, ServerCallContext context)
     {
         var query = new GameRecordQuery(
@@ -198,7 +245,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         {
             foreach (var result in results)
             {
-                reply.Items.Add(new GameRecordInfo
+                reply.Items.Add(new Protos.GameRecordInfo
                 {
                     ExternalRoundId = result.ExternalRoundId,
                     ExternalGameId = result.ExternalGameId,
