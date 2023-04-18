@@ -33,16 +33,16 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         IGetService<GameRecordMarkQuery, bool> gameRecordMarkService,
         IGetService<GameRecordInquire, GameRecordInquireResult> gameRecordInquireService)
     {
-        _fundOutService = fundOutService;
-        _fundInService = fundInService;
-        _fundStatusService = fundStatusService;
-        _gameUrlService = gameUrlService;
-        _playerCreateService = playerCreateService;
+        _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
+        _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
+        _fundStatusService = fundStatusService ?? throw new ArgumentNullException(nameof(fundStatusService));
+        _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
+        _playerCreateService = playerCreateService ?? throw new ArgumentNullException(nameof(playerCreateService));
         _playerCreateByBetLimitService = playerCreateByBetLimitService ?? throw new ArgumentNullException(nameof(playerCreateByBetLimitService));
-        _playerLogoutService = playerLogoutService;
+        _playerLogoutService = playerLogoutService ?? throw new ArgumentNullException(nameof(playerLogoutService));
         _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
-        _gameRecordService = gameRecordService;
-        _gameRecordMarkService = gameRecordMarkService;
+        _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
+        _gameRecordMarkService = gameRecordMarkService ?? throw new ArgumentNullException(nameof(gameRecordMarkService));
         _gameRecordInquireService = gameRecordInquireService ?? throw new ArgumentNullException(nameof(gameRecordInquireService));
     }
 
