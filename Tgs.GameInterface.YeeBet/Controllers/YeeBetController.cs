@@ -216,6 +216,42 @@ public class YeeBetController : ControllerBase
     }
 
     /// <summary>
+    /// Players the create asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///
+    ///         {
+    ///             "apiUrl": "http://api.98kbus.top/",
+    ///             "appId": "xtdA15OTVGEP",
+    ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0",
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "quotas": [5,6,7]
+    ///         }
+    /// </remarks>
+    [HttpPost("player/update/betlimit", Name = "PlayerUpdateBetLimit")]
+    public ValueTask<bool> PlayerUpdateBetLimitAsync(
+        [FromServices] IGetService<PlayerUpdateBetLimitCommand, bool> service,
+        PlayerUpdateBetLimitViewModel source)
+    {
+        var command = new PlayerUpdateBetLimitCommand(
+            ApiUrl: source.ApiUrl,
+            AppId: source.AppId,
+            SecretKey: source.SecretKey,
+            PlayerCode: source.PlayerCode,
+            Quotas: source.Quotas);
+
+        return service.GetAsync(
+            query: command,
+            cancellationToken: HttpContext.RequestAborted);
+    }
+
+    /// <summary>
     /// Players the balance asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>
