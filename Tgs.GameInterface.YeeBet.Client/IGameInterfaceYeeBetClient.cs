@@ -14,6 +14,17 @@ public interface IGameInterfaceYeeBetClient
         int languageId,
         CancellationToken cancellationToken = default);
 
+    ValueTask PlayerCreateByBetLimitAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        string playerCode,
+        int clientType,
+        string currency,
+        int languageId,
+        int[] quotas,
+        CancellationToken cancellationToken = default);
+
     ValueTask<PlayerBalanceReply> PlayerBalanceAsync(
        Uri apiUrl,
        string appId,

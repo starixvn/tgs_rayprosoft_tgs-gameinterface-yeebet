@@ -13,6 +13,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
     private readonly IGetService<FundStatusQuery, bool> _fundStatusService;
     private readonly IGetService<GameUrlQuery, string> _gameUrlService;
     private readonly ICommandService<PlayerCreateCommand> _playerCreateService;
+    private readonly ICommandService<PlayerCreateByBetLimitCommand> _playerCreateByBetLimitService;
     private readonly ICommandService<PlayerLogoutCommand> _playerLogoutService;
     private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
     private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
@@ -25,6 +26,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         IGetService<FundStatusQuery, bool> fundStatusService,
         IGetService<GameUrlQuery, string> gameUrlService,
         ICommandService<PlayerCreateCommand> playerCreateService,
+        ICommandService<PlayerCreateByBetLimitCommand> playerCreateByBetLimitService,
         ICommandService<PlayerLogoutCommand> playerLogoutService,
         IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
         IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
@@ -36,6 +38,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         _fundStatusService = fundStatusService;
         _gameUrlService = gameUrlService;
         _playerCreateService = playerCreateService;
+        _playerCreateByBetLimitService = playerCreateByBetLimitService ?? throw new ArgumentNullException(nameof(playerCreateByBetLimitService));
         _playerLogoutService = playerLogoutService;
         _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
         _gameRecordService = gameRecordService;
@@ -145,6 +148,28 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         };
     }
 
+    public override async Task<BaseReply> PlayerCreateByBetLimit(PlayerCreateByBetLimitRequest request, ServerCallContext context)
+    {
+        var command = new PlayerCreateByBetLimitCommand(
+            new Uri(request.ApiUrl),
+            request.AppId,
+            request.SecretKey,
+            request.PlayerCode,
+            request.ClientType,
+            request.Currency,
+            request.LanguageId,
+            request.Quotas.Select(x => x));
+
+        await _playerCreateByBetLimitService
+            .ExecuteAsync(command, context.CancellationToken)
+            .ConfigureAwait(false);
+
+        return new BaseReply
+        {
+            State = true
+        };
+    }
+
     public override async Task<BaseReply> PlayerLogout(PlayerLogoutRequest request, ServerCallContext context)
     {
         var command = new PlayerLogoutCommand(
@@ -194,7 +219,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
             request.PageIndex);
 
         var results = await _gameRecordInquireService
-            .GetAsync(query, context.CancellationToken)            
+            .GetAsync(query, context.CancellationToken)
             .ConfigureAwait(false);
 
         var reply = new GameRecordInfoReply();

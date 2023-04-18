@@ -174,6 +174,48 @@ public class YeeBetController : ControllerBase
     }
 
     /// <summary>
+    /// Players the create asynchronous.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <param name="source">The source.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// <b>Example</b><br />
+    ///
+    ///     Post
+    ///
+    ///         {
+    ///             "apiUrl": "http://api.98kbus.top/",
+    ///             "appId": "xtdA15OTVGEP",
+    ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0",
+    ///             "playerCode": "4ucmqplxb029",
+    ///             "clientType": 1,
+    ///             "currency": "CNY",
+    ///             "languageId": 1,
+    ///             "quotas": []
+    ///         }
+    /// </remarks>
+    [HttpPost("player/create/betlimit", Name = "PlayerCreateByBetLimit")]
+    public ValueTask PlayerCreateByBetLimitAsync(
+        [FromServices] ICommandService<PlayerCreateByBetLimitCommand> service,
+        PlayerCreateByBetLimitViewModel source)
+    {
+        var command = new PlayerCreateByBetLimitCommand(
+            ApiUrl: source.ApiUrl,
+            AppId: source.AppId,
+            SecretKey: source.SecretKey,
+            PlayerCode: source.PlayerCode,
+            ClientType: source.ClientType,
+            Currency: source.Currency,
+            LanguageId: source.LanguageId,
+            Quotas: source.Quotas);
+
+        return service.ExecuteAsync(
+            command: command,
+            cancellationToken: HttpContext.RequestAborted);
+    }
+
+    /// <summary>
     /// Players the balance asynchronous.
     /// </summary>
     /// <param name="service">The service.</param>

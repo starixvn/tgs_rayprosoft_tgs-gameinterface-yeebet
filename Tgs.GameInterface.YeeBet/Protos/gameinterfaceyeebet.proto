@@ -11,6 +11,7 @@ package gameinterfaceyeebet;
 service GameInterfaceYeeBet {
   // Sends a greeting
   rpc PlayerCreate (PlayerCreateRequest) returns (BaseReply);
+  rpc PlayerCreateByBetLimit (PlayerCreateByBetLimitRequest) returns (BaseReply);
   rpc PlayerBalance (PlayerBalanceRequest) returns (PlayerBalanceReply);  
   rpc PlayerLogout (PlayerLogoutRequest) returns (BaseReply);
   rpc FundIn (FundRequest) returns (FundReply);
@@ -30,8 +31,20 @@ message PlayerCreateRequest {
 	string player_code = 4;
 	int32 client_type = 5;
 	string currency = 6;
-	int32 language_id = 7;
+	int32 language_id = 7;	
 }
+
+message PlayerCreateByBetLimitRequest {
+	string api_url = 1;
+	string app_id = 2;	
+	string secret_key = 3;
+	string player_code = 4;
+	int32 client_type = 5;
+	string currency = 6;
+	int32 language_id = 7;
+	repeated int32 quotas = 8;
+}
+
 
 message PlayerBalanceRequest {
 	string api_url = 1;
