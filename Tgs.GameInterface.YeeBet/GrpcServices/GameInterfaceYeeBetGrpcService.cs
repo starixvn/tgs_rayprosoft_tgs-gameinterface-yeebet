@@ -14,6 +14,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
     private readonly IGetService<GameUrlQuery, string> _gameUrlService;
     private readonly ICommandService<PlayerCreateCommand> _playerCreateService;
     private readonly ICommandService<PlayerCreateByBetLimitCommand> _playerCreateByBetLimitService;
+    private readonly IGetService<PlayerUpdateBetLimitCommand, bool> _playerUpdateBetLimitService;
     private readonly ICommandService<PlayerLogoutCommand> _playerLogoutService;
     private readonly IGetService<PlayerBalanceQuery, PlayerBalanceResult> _playerBalanceService;
     private readonly IQueryService<GameRecordQuery, GameRecordResult> _gameRecordService;
@@ -27,6 +28,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         IGetService<GameUrlQuery, string> gameUrlService,
         ICommandService<PlayerCreateCommand> playerCreateService,
         ICommandService<PlayerCreateByBetLimitCommand> playerCreateByBetLimitService,
+        IGetService<PlayerUpdateBetLimitCommand, bool> playerUpdateBetLimitService,
         ICommandService<PlayerLogoutCommand> playerLogoutService,
         IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
         IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
@@ -39,6 +41,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         _gameUrlService = gameUrlService ?? throw new ArgumentNullException(nameof(gameUrlService));
         _playerCreateService = playerCreateService ?? throw new ArgumentNullException(nameof(playerCreateService));
         _playerCreateByBetLimitService = playerCreateByBetLimitService ?? throw new ArgumentNullException(nameof(playerCreateByBetLimitService));
+        _playerUpdateBetLimitService = playerUpdateBetLimitService ?? throw new ArgumentNullException(nameof(playerUpdateBetLimitService));
         _playerLogoutService = playerLogoutService ?? throw new ArgumentNullException(nameof(playerLogoutService));
         _playerBalanceService = playerBalanceService ?? throw new ArgumentNullException(nameof(playerBalanceService));
         _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
@@ -167,6 +170,25 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         return new BaseReply
         {
             State = true
+        };
+    }
+
+    public override async Task<BaseReply> PlayerUpdateBetLimit(PlayerUpdateBetLimitRequest request, ServerCallContext context)
+    {
+        var command = new PlayerUpdateBetLimitCommand(
+            new Uri(request.ApiUrl),
+            request.AppId,
+            request.SecretKey,
+            request.PlayerCode,
+            request.Quotas.Select(x => x));
+
+        var result = await _playerUpdateBetLimitService
+            .GetAsync(command, context.CancellationToken)
+            .ConfigureAwait(false);
+
+        return new BaseReply
+        {
+            State = result
         };
     }
 

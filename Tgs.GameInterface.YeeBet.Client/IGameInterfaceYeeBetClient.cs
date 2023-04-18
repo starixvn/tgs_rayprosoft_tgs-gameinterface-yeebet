@@ -25,6 +25,14 @@ public interface IGameInterfaceYeeBetClient
         IEnumerable<int> quotas,
         CancellationToken cancellationToken = default);
 
+    ValueTask<bool> PlayerUpdateBetLimitAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        string playerCode,
+        IEnumerable<int> quotas,
+        CancellationToken cancellationToken = default);
+
     ValueTask<PlayerBalanceReply> PlayerBalanceAsync(
        Uri apiUrl,
        string appId,

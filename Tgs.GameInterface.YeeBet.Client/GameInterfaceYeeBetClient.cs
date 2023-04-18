@@ -237,4 +237,26 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
                 },
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
+
+    public async ValueTask<bool> PlayerUpdateBetLimitAsync(Uri apiUrl, string appId, string secretKey, string playerCode, IEnumerable<int> quotas, CancellationToken cancellationToken = default)
+    {
+        var request = new PlayerUpdateBetLimitRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AppId = appId,
+            SecretKey = secretKey,
+            PlayerCode = playerCode,
+        };
+
+        foreach (var quota in quotas)
+        {
+            request.Quotas.Add(quota);
+        }
+
+        var reply = await _client
+            .PlayerUpdateBetLimitAsync(request: request)
+            .ConfigureAwait(false);
+
+        return reply.State;
+    }
 }
