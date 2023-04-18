@@ -196,7 +196,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
         int clientType,
         string currency,
         int languageId,
-        int[] quotas,
+        IEnumerable<int> quotas,
         CancellationToken cancellationToken = default)
     {
         var request = new PlayerCreateByBetLimitRequest
@@ -210,7 +210,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             LanguageId = languageId,
         };
 
-        if (quotas.Length > 0)
+        if (quotas.Count() > 0)
         {
             foreach (var quota in quotas)
             {

@@ -22,7 +22,7 @@ public interface IGameInterfaceYeeBetClient
         int clientType,
         string currency,
         int languageId,
-        int[] quotas,
+        IEnumerable<int> quotas,
         CancellationToken cancellationToken = default);
 
     ValueTask<PlayerBalanceReply> PlayerBalanceAsync(
