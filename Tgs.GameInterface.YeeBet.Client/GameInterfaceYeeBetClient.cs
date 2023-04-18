@@ -210,9 +210,12 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             LanguageId = languageId,
         };
 
-        foreach (var quota in quotas)
+        if (quotas.Length > 0)
         {
-            request.Quotas.Add(quota);
+            foreach (var quota in quotas)
+            {
+                request.Quotas.Add(quota);
+            }
         }
 
         _ = await _client
