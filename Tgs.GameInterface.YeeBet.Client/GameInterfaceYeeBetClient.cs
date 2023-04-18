@@ -160,21 +160,70 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-    public async ValueTask PlayerCreateAsync(Uri apiUrl, string appId, string secretKey, string playerCode, int clientType, string currency, int languageId, CancellationToken cancellationToken = default)
-        => await _client
+    public async ValueTask PlayerCreateAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        string playerCode,
+        int clientType,
+        string currency,
+        int languageId,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new PlayerCreateRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AppId = appId,
+            SecretKey = secretKey,
+            PlayerCode = playerCode,
+            ClientType = clientType,
+            Currency = currency,
+            LanguageId = languageId,
+        };
+
+        _ = await _client
             .PlayerCreateAsync(
-                request: new PlayerCreateRequest
-                {
-                    ApiUrl = apiUrl.ToString(),
-                    AppId = appId,
-                    SecretKey = secretKey,
-                    PlayerCode = playerCode,
-                    ClientType = clientType,
-                    Currency = currency,
-                    LanguageId = languageId,
-                },
+                request: request,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    public async ValueTask PlayerCreateByBetLimitAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        string playerCode,
+        int clientType,
+        string currency,
+        int languageId,
+        IEnumerable<int> quotas,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new PlayerCreateByBetLimitRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AppId = appId,
+            SecretKey = secretKey,
+            PlayerCode = playerCode,
+            ClientType = clientType,
+            Currency = currency,
+            LanguageId = languageId,
+        };
+
+        if (quotas.Count() > 0)
+        {
+            foreach (var quota in quotas)
+            {
+                request.Quotas.Add(quota);
+            }
+        }
+
+        _ = await _client
+            .PlayerCreateByBetLimitAsync(
+                request: request,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
 
     public async ValueTask PlayerLogoutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, CancellationToken cancellationToken = default)
         => await _client
@@ -188,4 +237,26 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
                 },
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
+
+    public async ValueTask<bool> PlayerUpdateBetLimitAsync(Uri apiUrl, string appId, string secretKey, string playerCode, IEnumerable<int> quotas, CancellationToken cancellationToken = default)
+    {
+        var request = new PlayerUpdateBetLimitRequest
+        {
+            ApiUrl = apiUrl.ToString(),
+            AppId = appId,
+            SecretKey = secretKey,
+            PlayerCode = playerCode,
+        };
+
+        foreach (var quota in quotas)
+        {
+            request.Quotas.Add(quota);
+        }
+
+        var reply = await _client
+            .PlayerUpdateBetLimitAsync(request: request)
+            .ConfigureAwait(false);
+
+        return reply.State;
+    }
 }

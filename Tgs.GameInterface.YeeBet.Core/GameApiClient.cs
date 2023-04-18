@@ -285,7 +285,15 @@ internal class GameApiClient : IGameApiClient
         }
     }
 
-    public async ValueTask RegisterAsync(Uri apiUrl, string appId, string secretKey, int clientType, string currency, int languageId, string username, CancellationToken cancellationToken = default)
+    public async ValueTask RegisterAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        int clientType,
+        string currency,
+        int languageId,
+        string username,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -309,6 +317,42 @@ internal class GameApiClient : IGameApiClient
             throw new Exception($"The game provider responded with an error.({result} {jsonNode["desc"]})");
     }
 
+    public async ValueTask RegisterAsync(
+        Uri apiUrl,
+        string appId,
+        string secretKey,
+        int clientType,
+        string currency,
+        int languageId,
+        IEnumerable<int> quotas,
+        string username,
+        CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            { "appid", appId },
+            { "username", username },
+            { "iscreate", "1" },
+            { "currency", currency },
+            { "clienttype", clientType.ToString() },
+            { "language", languageId.ToString() },
+        };
+
+        if (quotas.Count() is not 0)
+            parameters.Add("quotas", string.Join(",", quotas));
+
+        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+
+        parameters.Add("sign", sign);
+
+        var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, "registerbyquota", cancellationToken).ConfigureAwait(false);
+
+        var result = jsonNode["result"]!.GetValue<int>();
+
+        if (result < 0)
+            throw new Exception($"The game provider responded with an error.({result} {jsonNode["desc"]})");
+    }
+
     public async ValueTask<bool> RemoveBetsAsync(Uri apiUrl, string appId, string secretKey, IEnumerable<string> externalRoundIds, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
@@ -321,6 +365,31 @@ internal class GameApiClient : IGameApiClient
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/data/removebets", parameters, "removebets", cancellationToken).ConfigureAwait(false);
+
+        var result = jsonNode!["result"]!.GetValue<int>();
+
+        if (result < 0)
+        {
+            _logger.LogError("The game provider responded with an error.({result} {desc})", result, jsonNode["desc"]!.ToString());
+            return false;
+        }
+
+        return true;
+    }
+
+    public async ValueTask<bool> SetQuotaAsync(Uri apiUrl, string appId, string secretKey, string username, IEnumerable<int> quotas, CancellationToken cancellationToken = default)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            { "appid", appId },
+            { "username", username },
+            { "qids", string.Join(",",quotas) },
+        };
+
+        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        parameters.Add("sign", sign);
+
+        var jsonNode = await GetAsync(apiUrl, "api/quota/set", parameters, "setquota", cancellationToken).ConfigureAwait(false);
 
         var result = jsonNode!["result"]!.GetValue<int>();
 
