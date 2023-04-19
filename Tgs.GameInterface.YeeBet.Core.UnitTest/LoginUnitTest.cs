@@ -59,4 +59,54 @@ public class LoginUnitTest
 
         Assert.AreEqual(gameUrl, actual);
     }
+
+    [TestMethod]
+    public void 未註冊玩家登入遊戲失敗()
+    {
+        var apiUrl = new Uri("http://api.98kbus.top/");
+        var appId = "xtdA15OTVGEP";
+        var secretKey = "298511c51d785332d8d279998b79cd3c";
+        var clientType = 1;
+        var languageId = 1;
+        var username = "4udxttua0glo";
+
+        var fakeLog = NullLogger<GameApiClient>.Instance;
+
+        var url = new Uri(apiUrl, $"/api/login");
+
+        var dict = new Dictionary<string, string>
+        {
+            ["appid"] = appId,
+            ["username"] = username,
+            ["iscreate"] = 0.ToString(),
+            ["clienttype"] = clientType.ToString(),
+            ["language"] = languageId.ToString(),
+        };
+
+        string? gameUrl = null;
+
+        var response = new
+        {
+            result = -1011,
+            desc = "unknown error!",
+            openurl = gameUrl
+        };
+
+        var content = JsonSerializer.Serialize(response);
+
+        var handler = new MockHttpMessageHandler();
+
+        _ = handler.Expect(HttpMethod.Post, url.ToString())
+            .With(req => req.Content?.Headers.ContentType?.MediaType == "application/x-www-form-urlencoded")
+            .WithFormData(dict)
+            .Respond(HttpStatusCode.OK, new StringContent(content));
+
+        var fakeHttpClient = handler.ToHttpClient();
+
+        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+
+        _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
+            .LoginAsync(apiUrl, appId, secretKey, clientType, languageId, username)
+            .ConfigureAwait(false));
+    }
 }
