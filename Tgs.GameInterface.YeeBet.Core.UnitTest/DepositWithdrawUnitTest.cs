@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
@@ -19,6 +20,7 @@ public class DepositWithdrawUnitTest
         var amount = 1000;
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
@@ -50,7 +52,7 @@ public class DepositWithdrawUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, tradeNo, amount)
@@ -71,6 +73,7 @@ public class DepositWithdrawUnitTest
         var amount = 10000;
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
@@ -102,7 +105,7 @@ public class DepositWithdrawUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, tradeNo, amount)
@@ -120,6 +123,7 @@ public class DepositWithdrawUnitTest
         var amount = -100;
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/user/dw");
 
@@ -151,7 +155,7 @@ public class DepositWithdrawUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, tradeNo, amount)
@@ -172,6 +176,7 @@ public class DepositWithdrawUnitTest
         var amount = -10000;
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var dict = new Dictionary<string, string>
         {
@@ -202,7 +207,7 @@ public class DepositWithdrawUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .DepositWithdrawAsync(apiUrl, appId, secretKey, username, long.MinValue, amount)

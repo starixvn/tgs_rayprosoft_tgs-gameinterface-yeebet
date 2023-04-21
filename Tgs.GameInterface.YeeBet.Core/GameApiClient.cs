@@ -12,13 +12,16 @@ internal class GameApiClient : IGameApiClient
 {
     private readonly ILogger<GameApiClient> _logger;
     private readonly HttpClient _client;
+    private readonly IYeeBetHasher _hasher;
 
     public GameApiClient(
         ILogger<GameApiClient> logger,
-        HttpClient client)
+        HttpClient client,
+        IYeeBetHasher hasher)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _client = client ?? throw new ArgumentNullException(nameof(client));
+        _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
     }
 
     public async ValueTask<BalanceResult> BalanceAsync(Uri apiUrl, string appId, string secretKey, string username, CancellationToken cancellationToken = default)
@@ -29,7 +32,7 @@ internal class GameApiClient : IGameApiClient
             { "username", username },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -56,7 +59,7 @@ internal class GameApiClient : IGameApiClient
             { "size", pageSize.ToString() },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/record/bets/detail", parameters, "betsdetail", cancellationToken).ConfigureAwait(false);
@@ -118,7 +121,7 @@ internal class GameApiClient : IGameApiClient
             { "tradeno", tradeNo.ToString() },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await PostAsync(apiUrl, path: "api/user/dw", parameters, "depositwithdraw", cancellationToken).ConfigureAwait(false);
@@ -148,7 +151,7 @@ internal class GameApiClient : IGameApiClient
             { "index", "1" },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/user/trade", parameters, "trade", cancellationToken).ConfigureAwait(false);
@@ -171,7 +174,7 @@ internal class GameApiClient : IGameApiClient
             { "size", size.ToString() },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/data/getbets", parameters, "getbets", cancellationToken).ConfigureAwait(false);
@@ -217,7 +220,7 @@ internal class GameApiClient : IGameApiClient
             { "username", username },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await PostAsync(apiUrl, path: "api/kickout", parameters, "kickout", cancellationToken).ConfigureAwait(false);
@@ -239,7 +242,7 @@ internal class GameApiClient : IGameApiClient
             { "language", languageId.ToString() },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -259,7 +262,7 @@ internal class GameApiClient : IGameApiClient
             { "appid", appId },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -305,7 +308,7 @@ internal class GameApiClient : IGameApiClient
             { "language", languageId.ToString() },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -341,7 +344,7 @@ internal class GameApiClient : IGameApiClient
         if (quotas.Count() is not 0)
             parameters.Add("quotas", string.Join(",", quotas));
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -361,7 +364,7 @@ internal class GameApiClient : IGameApiClient
             { "ids", string.Join(",",externalRoundIds) },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/data/removebets", parameters, "removebets", cancellationToken).ConfigureAwait(false);
@@ -386,7 +389,7 @@ internal class GameApiClient : IGameApiClient
             { "qids", string.Join(",",quotas) },
         };
 
-        var sign = YeeBetHasher.ComputeHash(parameters, secretKey);
+        var sign = _hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/quota/set", parameters, "setquota", cancellationToken).ConfigureAwait(false);

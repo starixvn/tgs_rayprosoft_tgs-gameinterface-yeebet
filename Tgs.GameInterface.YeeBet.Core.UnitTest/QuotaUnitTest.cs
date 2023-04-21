@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
@@ -17,6 +18,7 @@ public class QuotaUnitTest
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"api/quota/list");
 
@@ -73,7 +75,7 @@ public class QuotaUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .QuotaAsync(apiUrl, appId, secretKey)

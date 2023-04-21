@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
@@ -18,6 +19,7 @@ public class GetBetsUnitTest
         var size = 1000;
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/data/getbets");
 
@@ -120,7 +122,7 @@ public class GetBetsUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .GetBetsAsync(apiUrl, appId, secretKey, size)
