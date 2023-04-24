@@ -17,5 +17,6 @@ public static class ServiceCollectionExtensions
             .RegisterAllServiceUtilityTypes(
                 Assembly.GetExecutingAssembly(),
                 ServiceLifetime.Transient)
-            .AddSingleton<ISnowflakeUtensil, SnowflakeUtensil>();
+            .AddSingleton<ISnowflakeUtensil, SnowflakeUtensil>()
+            .AddSingleton<IYeeBetHasher, YeeBetHasher>();
 }
