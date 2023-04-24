@@ -1,18 +1,20 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Tgs.GameInterface.YeeBet.Core;
 
-public class YeeBetHasher
+public class YeeBetHasher : IYeeBetHasher
 {
-    private static readonly MD5 _Md5;
+    private readonly ILogger<YeeBetHasher> _logger;
 
-    static YeeBetHasher()
+    public YeeBetHasher(ILogger<YeeBetHasher> logger)
     {
-        _Md5 = MD5.Create();
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public static string ComputeHash(IDictionary<string, string> dict, string secretKey)
+    public string ComputeHash(IDictionary<string, string> dict, string secretKey)
     {
         var sortDict = dict
             .OrderBy(x => x.Key)
@@ -25,9 +27,11 @@ public class YeeBetHasher
 
         var plainText = $"{content}&key={secretKey}";
 
+        _logger.LogInformation("YeeBetHasher ComputeHash sortDict:{sortDict}, secretKey:{secretKey}", JsonSerializer.Serialize(sortDict), secretKey);
+
         var data = Encoding.UTF8.GetBytes(plainText);
 
-        var hash = _Md5.ComputeHash(data);
+        var hash = MD5.HashData(data);
 
         return Convert.ToHexString(hash).ToLower();
     }

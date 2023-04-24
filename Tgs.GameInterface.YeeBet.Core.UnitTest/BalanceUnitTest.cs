@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Web;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
@@ -18,6 +19,7 @@ public class BalanceUnitTest
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/user/balance");
 
@@ -44,7 +46,7 @@ public class BalanceUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .BalanceAsync(apiUrl, appId, secretKey, username)
@@ -63,6 +65,7 @@ public class BalanceUnitTest
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/user/balance");
 
@@ -89,7 +92,7 @@ public class BalanceUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .BalanceAsync(apiUrl, appId, secretKey, username)

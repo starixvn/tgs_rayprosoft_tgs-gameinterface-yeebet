@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
@@ -17,6 +18,7 @@ public class KickOutUnitTest
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/kickout");
 
@@ -43,7 +45,7 @@ public class KickOutUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         await sut
             .KickOutAsync(apiUrl, appId, secretKey, username)
@@ -59,6 +61,7 @@ public class KickOutUnitTest
         var secretKey = "298511c51d785332d8d279998b79cd3c";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/kickout");
 
@@ -85,7 +88,7 @@ public class KickOutUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .KickOutAsync(apiUrl, appId, secretKey, username)

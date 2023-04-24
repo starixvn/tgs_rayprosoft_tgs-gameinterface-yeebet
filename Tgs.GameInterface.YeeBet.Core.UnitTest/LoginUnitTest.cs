@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using RichardSzalay.MockHttp;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest;
@@ -19,6 +20,7 @@ public class LoginUnitTest
         var username = "4ucmqplxkuyd";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/login");
 
@@ -51,7 +53,7 @@ public class LoginUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
             .LoginAsync(apiUrl, appId, secretKey, clientType, languageId, username)
@@ -71,6 +73,7 @@ public class LoginUnitTest
         var username = "4udxttua0glo";
 
         var fakeLog = NullLogger<GameApiClient>.Instance;
+        var fakeHasher = Substitute.For<IYeeBetHasher>();
 
         var url = new Uri(apiUrl, $"/api/login");
 
@@ -103,7 +106,7 @@ public class LoginUnitTest
 
         var fakeHttpClient = handler.ToHttpClient();
 
-        var sut = new GameApiClient(fakeLog, fakeHttpClient);
+        var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         _ = Assert.ThrowsExceptionAsync<Exception>(async () => await sut
             .LoginAsync(apiUrl, appId, secretKey, clientType, languageId, username)
