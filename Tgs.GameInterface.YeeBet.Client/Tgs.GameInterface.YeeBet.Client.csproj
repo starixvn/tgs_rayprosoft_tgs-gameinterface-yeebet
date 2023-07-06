@@ -1,28 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	  <Version>0.0.6</Version>
-	  <Authors>Raypro</Authors>
-	  <RootNamespace>Tgs.GameInterface.YeeBet.Client</RootNamespace>
-	  <PackageId>Tgs.GameInterface.YeeBet.Client</PackageId>
-	  <Title>Tgs.GameInterface.YeeBet.Client</Title>
-	  <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-yeebet</PackageProjectUrl>
-	  <RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-yeebet.git</RepositoryUrl>
-	  <RepositoryType>git</RepositoryType>
-	  <PackageTags>Tgs GameInterface YeeBet Client</PackageTags>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="gameinterfaceyeebet.proto" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>0.0.7</Version>
+		<Authors>Raypro</Authors>
+		<RootNamespace>Tgs.GameInterface.YeeBet.Client</RootNamespace>
+		<PackageId>Tgs.GameInterface.YeeBet.Client</PackageId>
+		<Title>Tgs.GameInterface.YeeBet.Client</Title>
+		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-yeebet</PackageProjectUrl>
+		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-yeebet.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>Tgs GameInterface YeeBet Client</PackageTags>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.51.0" />
-		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.51.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.52.0">
+		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.55.0" />
+		<PackageReference Include="Grpc.Net.ClientFactory" Version="2.55.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.56.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -30,7 +26,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Protobuf Include="gameinterfaceyeebet.proto" />
+	  <Protobuf Include="..\Tgs.GameInterface.YeeBet\Protos\gameinterfaceyeebet.proto">
+	    <Link>gameinterfaceyeebet.proto</Link>
+	  </Protobuf>
 	</ItemGroup>
 
 </Project>

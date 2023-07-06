@@ -8,6 +8,7 @@ namespace Tgs.GameInterface.YeeBet.GrpcServices;
 
 public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceYeeBetBase
 {
+    private readonly ILogger<GameInterfaceYeeBetGrpcService> _logger;
     private readonly IGetService<FundOutQuery, FundResult> _fundOutService;
     private readonly IGetService<FundInQuery, FundResult> _fundInService;
     private readonly IGetService<FundStatusQuery, bool> _fundStatusService;
@@ -22,6 +23,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
     private readonly IGetService<GameRecordInquire, GameRecordInquireResult> _gameRecordInquireService;
 
     public GameInterfaceYeeBetGrpcService(
+        ILogger<GameInterfaceYeeBetGrpcService> logger,
         IGetService<FundOutQuery, FundResult> fundOutService,
         IGetService<FundInQuery, FundResult> fundInService,
         IGetService<FundStatusQuery, bool> fundStatusService,
@@ -35,6 +37,7 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         IGetService<GameRecordMarkQuery, bool> gameRecordMarkService,
         IGetService<GameRecordInquire, GameRecordInquireResult> gameRecordInquireService)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _fundOutService = fundOutService ?? throw new ArgumentNullException(nameof(fundOutService));
         _fundInService = fundInService ?? throw new ArgumentNullException(nameof(fundInService));
         _fundStatusService = fundStatusService ?? throw new ArgumentNullException(nameof(fundStatusService));
@@ -47,6 +50,16 @@ public class GameInterfaceYeeBetGrpcService : GameInterfaceYeeBet.GameInterfaceY
         _gameRecordService = gameRecordService ?? throw new ArgumentNullException(nameof(gameRecordService));
         _gameRecordMarkService = gameRecordMarkService ?? throw new ArgumentNullException(nameof(gameRecordMarkService));
         _gameRecordInquireService = gameRecordInquireService ?? throw new ArgumentNullException(nameof(gameRecordInquireService));
+    }
+
+    public override Task<CheckingServiceReply> CheckingService(CheckingServiceRequest request, ServerCallContext context)
+    {
+        _logger.LogWarning("LogOn:{logOn} Message: Create a check connection.({machineName})", DateTime.Now.ToString("o"), request.MachineName);
+
+        return Task.FromResult(new CheckingServiceReply
+        {
+            MachineName = Environment.MachineName
+        });
     }
 
     public override async Task<FundReply> FundOut(FundRequest request, ServerCallContext context)

@@ -4,6 +4,10 @@ namespace Tgs.GameInterface.YeeBet.Client;
 
 public interface IGameInterfaceYeeBetClient
 {
+    ValueTask<string> CheckingServiceAsync(
+        string machineName, 
+        CancellationToken cancellationToken = default);
+
     ValueTask PlayerCreateAsync(
         Uri apiUrl,
         string appId,

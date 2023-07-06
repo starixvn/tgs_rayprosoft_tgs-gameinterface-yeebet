@@ -77,7 +77,7 @@ builder.Services.AddGameInterfaceCore(
         ?? Dns.GetHostEntry(Dns.GetHostName()).AddressList.Where(ip => ip.AddressFamily == AddressFamily.InterNetwork).Single().ToString();
     });
 
-builder.Services       
+builder.Services
     .AddOpenTelemetry()
     .WithTracing(builder => builder
         .SetResourceBuilder(ResourceBuilder.CreateDefault()
@@ -109,8 +109,7 @@ builder.Services
     .AddInterceptionService()
     .AddServiceUtiltiyInterceptors();
 
-builder.Services
-    .AddHealthChecks();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 

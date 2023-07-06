@@ -5,18 +5,11 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.YeeBet", "Tgs.GameInterface.YeeBet\Tgs.GameInterface.YeeBet.csproj", "{411986F9-4F60-4882-8586-53DE149F5F8B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B06F98E9-D5AE-408E-A069-1F669083559C}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		CodeMaid.config = CodeMaid.config
-		nuget.config = nuget.config
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.YeeBet.Core", "Tgs.GameInterface.YeeBet.Core\Tgs.GameInterface.YeeBet.Core.csproj", "{0A7B95A4-DB23-4843-8342-D8D38808BDE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.YeeBet.Core", "Tgs.GameInterface.YeeBet.Core\Tgs.GameInterface.YeeBet.Core.csproj", "{0A7B95A4-DB23-4843-8342-D8D38808BDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.YeeBet.Core.UnitTest", "Tgs.GameInterface.YeeBet.Core.UnitTest\Tgs.GameInterface.YeeBet.Core.UnitTest.csproj", "{2C162315-113D-42B6-9864-3E343CF48C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.YeeBet.Core.UnitTest", "Tgs.GameInterface.YeeBet.Core.UnitTest\Tgs.GameInterface.YeeBet.Core.UnitTest.csproj", "{2C162315-113D-42B6-9864-3E343CF48C36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.YeeBet.Client", "Tgs.GameInterface.YeeBet.Client\Tgs.GameInterface.YeeBet.Client.csproj", "{C9C89C4B-76C0-469D-BAE3-81A4DB9952AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.YeeBet.Client", "Tgs.GameInterface.YeeBet.Client\Tgs.GameInterface.YeeBet.Client.csproj", "{C9C89C4B-76C0-469D-BAE3-81A4DB9952AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
