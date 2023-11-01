@@ -7,7 +7,7 @@ public record BetResult(
     DateTimeOffset ExternalClosedOn,
     decimal Bet,
     decimal ValidBet,
-    decimal TurnOver,    
+    decimal TurnOver,
     decimal WinLoss,
     string AdditionalData,
     bool IsVoid,

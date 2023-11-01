@@ -20,7 +20,7 @@ internal class FundInGetService : IGetService<FundInQuery, FundResult>
     }
 
     public async ValueTask<FundResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
-    {        
+    {
         var trsId = _snowflakeUtensil.NextId();
         try
         {
@@ -30,7 +30,7 @@ internal class FundInGetService : IGetService<FundInQuery, FundResult>
             secretKey: query.SecretKey,
             username: query.PlayerCode,
             tradeNo: trsId,
-            amount: - query.Amount,
+            amount: -query.Amount,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
             return new FundResult(

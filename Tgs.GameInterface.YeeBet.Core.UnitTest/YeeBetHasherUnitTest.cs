@@ -9,7 +9,7 @@ public class YeeBetHasherUnitTest
     public void Balance()
     {
         var fakeLog = NullLogger<YeeBetHasher>.Instance;
-        
+
         var secretKey = "4885366DF30D880224FF6AA46FBDE4F0";
 
         var dict = new Dictionary<string, string>

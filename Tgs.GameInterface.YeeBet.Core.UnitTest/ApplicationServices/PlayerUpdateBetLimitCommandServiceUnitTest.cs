@@ -24,7 +24,7 @@ public class PlayerUpdateBetLimitCommandServiceUnitTest
             .GetAsync(command)
             .ConfigureAwait(false);
 
-        await fakeGameApiClient
+        _ = await fakeGameApiClient
            .Received(1)
            .SetQuotaAsync(
                Arg.Is(command.ApiUrl),

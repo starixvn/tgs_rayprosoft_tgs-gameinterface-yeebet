@@ -16,7 +16,7 @@ internal class GameUrlGetService : IGetService<GameUrlQuery, string>
             apiUrl: query.ApiUrl,
             appId: query.AppId,
             secretKey: query.SecretKey,
-            clientType:query.ClientType,            
+            clientType: query.ClientType,
             languageId: query.LanguageId,
             username: query.PlayerCode,
             cancellationToken: cancellationToken);

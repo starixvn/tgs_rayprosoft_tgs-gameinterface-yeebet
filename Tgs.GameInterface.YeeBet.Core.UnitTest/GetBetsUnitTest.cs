@@ -117,7 +117,7 @@ public class GetBetsUnitTest
         var handler = new MockHttpMessageHandler();
 
         _ = handler.Expect(HttpMethod.Get, url.ToString())
-            .WithQueryString(query.ToString())
+            .WithQueryString(query.ToString()!)
             .Respond(HttpStatusCode.OK, new StringContent(content));
 
         var fakeHttpClient = handler.ToHttpClient();
