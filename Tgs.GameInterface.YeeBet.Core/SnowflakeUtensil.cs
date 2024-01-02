@@ -14,7 +14,7 @@ internal class SnowflakeUtensil : ISnowflakeUtensil
         ILogger<SnowflakeUtensil> logger,
         IOptions<IPAddressOptions> options)
     {
-        if (options is null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         var ipAddress = IPAddress.Parse(options.Value.IPAddress);

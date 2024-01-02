@@ -8,22 +8,11 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core;
 
-internal class GameApiClient : IGameApiClient
+internal class GameApiClient(
+    ILogger<GameApiClient> logger,
+    HttpClient client,
+    IYeeBetHasher hasher) : IGameApiClient
 {
-    private readonly ILogger<GameApiClient> _logger;
-    private readonly HttpClient _client;
-    private readonly IYeeBetHasher _hasher;
-
-    public GameApiClient(
-        ILogger<GameApiClient> logger,
-        HttpClient client,
-        IYeeBetHasher hasher)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-        _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
-    }
-
     public async ValueTask<BalanceResult> BalanceAsync(Uri apiUrl, string appId, string secretKey, string username, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
@@ -32,7 +21,7 @@ internal class GameApiClient : IGameApiClient
             { "username", username },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -59,7 +48,7 @@ internal class GameApiClient : IGameApiClient
             { "size", pageSize.ToString() },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/record/bets/detail", parameters, "betsdetail", cancellationToken).ConfigureAwait(false);
@@ -71,7 +60,7 @@ internal class GameApiClient : IGameApiClient
 
         if (jsonNode["array"] is null)
         {
-            _logger.LogInformation("bets detail is null");
+            logger.LogInformation("bets detail is null");
             return new BetsDetailResult
             {
                 Total = 0,
@@ -80,7 +69,7 @@ internal class GameApiClient : IGameApiClient
         }
         var array = jsonNode!["array"]!.AsArray();
 
-        if (array is null || !array.Any())
+        if (array is null || array.Count == 0)
         {
             return new BetsDetailResult
             {
@@ -121,7 +110,7 @@ internal class GameApiClient : IGameApiClient
             { "tradeno", tradeNo.ToString() },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await PostAsync(apiUrl, path: "api/user/dw", parameters, "depositwithdraw", cancellationToken).ConfigureAwait(false);
@@ -151,7 +140,7 @@ internal class GameApiClient : IGameApiClient
             { "index", "1" },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/user/trade", parameters, "trade", cancellationToken).ConfigureAwait(false);
@@ -174,7 +163,7 @@ internal class GameApiClient : IGameApiClient
             { "size", size.ToString() },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/data/getbets", parameters, "getbets", cancellationToken).ConfigureAwait(false);
@@ -189,7 +178,7 @@ internal class GameApiClient : IGameApiClient
 
         var array = jsonNode!["array"]!.AsArray();
 
-        if (array is null || !array.Any())
+        if (array is null || array.Count == 0)
             yield break;
 
         foreach (var item in array)
@@ -220,7 +209,7 @@ internal class GameApiClient : IGameApiClient
             { "username", username },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await PostAsync(apiUrl, path: "api/kickout", parameters, "kickout", cancellationToken).ConfigureAwait(false);
@@ -242,7 +231,7 @@ internal class GameApiClient : IGameApiClient
             { "language", languageId.ToString() },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -262,7 +251,7 @@ internal class GameApiClient : IGameApiClient
             { "appid", appId },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -275,7 +264,7 @@ internal class GameApiClient : IGameApiClient
 
         var array = jsonNode!["array"]!.AsArray();
 
-        if (array is null || !array.Any())
+        if (array is null || array.Count == 0)
             yield break;
 
         foreach (var item in array)
@@ -308,7 +297,7 @@ internal class GameApiClient : IGameApiClient
             { "language", languageId.ToString() },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -344,7 +333,7 @@ internal class GameApiClient : IGameApiClient
         if (quotas.Count() is not 0)
             parameters.Add("quotas", string.Join(",", quotas));
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
 
         parameters.Add("sign", sign);
 
@@ -364,7 +353,7 @@ internal class GameApiClient : IGameApiClient
             { "ids", string.Join(",",externalRoundIds) },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/data/removebets", parameters, "removebets", cancellationToken).ConfigureAwait(false);
@@ -373,7 +362,7 @@ internal class GameApiClient : IGameApiClient
 
         if (result < 0)
         {
-            _logger.LogError("The game provider responded with an error.({result} {desc})", result, jsonNode["desc"]!.ToString());
+            logger.LogError("The game provider responded with an error.({result} {desc})", result, jsonNode["desc"]!.ToString());
             return false;
         }
 
@@ -389,7 +378,7 @@ internal class GameApiClient : IGameApiClient
             { "qids", string.Join(",",quotas) },
         };
 
-        var sign = _hasher.ComputeHash(parameters, secretKey);
+        var sign = hasher.ComputeHash(parameters, secretKey);
         parameters.Add("sign", sign);
 
         var jsonNode = await GetAsync(apiUrl, "api/quota/set", parameters, "setquota", cancellationToken).ConfigureAwait(false);
@@ -398,7 +387,7 @@ internal class GameApiClient : IGameApiClient
 
         if (result < 0)
         {
-            _logger.LogError("The game provider responded with an error.({result} {desc})", result, jsonNode["desc"]!.ToString());
+            logger.LogError("The game provider responded with an error.({result} {desc})", result, jsonNode["desc"]!.ToString());
             return false;
         }
 
@@ -425,7 +414,7 @@ internal class GameApiClient : IGameApiClient
 
         var url = new Uri(apiUrl, $"{path}?{queryStrings}");
 
-        var httpResponseMessage = await _client.GetAsync(url, cancellationToken);
+        var httpResponseMessage = await client.GetAsync(url, cancellationToken);
 
         sw.Stop();
 
@@ -450,7 +439,7 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 
@@ -472,7 +461,7 @@ internal class GameApiClient : IGameApiClient
 
         var url = new Uri(apiUrl, path);
 
-        var httpResponseMessage = await _client.PostAsync(url, content, cancellationToken);
+        var httpResponseMessage = await client.PostAsync(url, content, cancellationToken);
 
         sw.Stop();
 
@@ -497,7 +486,7 @@ internal class GameApiClient : IGameApiClient
             ExecutionTimeMs = (int)sw.ElapsedMilliseconds,
             RecordedOn = DateTimeOffset.UtcNow
         };
-        _logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
+        logger.LogInformation("{apiLogEvent}", JsonSerializer.Serialize(apiLogEvent));
 
         _ = httpResponseMessage.EnsureSuccessStatusCode();
 

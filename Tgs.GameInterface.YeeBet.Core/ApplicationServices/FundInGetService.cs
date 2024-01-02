@@ -3,28 +3,17 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-internal class FundInGetService : IGetService<FundInQuery, FundResult>
+internal class FundInGetService(
+    ILogger<FundInGetService> logger,
+    ISnowflakeUtensil snowflakeUtensil,
+    IGameApiClient client) : IGetService<FundInQuery, FundResult>
 {
-    private readonly ILogger<FundInGetService> _logger;
-    private readonly ISnowflakeUtensil _snowflakeUtensil;
-    private readonly IGameApiClient _client;
-
-    public FundInGetService(
-        ILogger<FundInGetService> logger,
-        ISnowflakeUtensil snowflakeUtensil,
-        IGameApiClient client)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _snowflakeUtensil = snowflakeUtensil ?? throw new ArgumentNullException(nameof(snowflakeUtensil));
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<FundResult> GetAsync(FundInQuery query, CancellationToken cancellationToken = default)
     {
-        var trsId = _snowflakeUtensil.NextId();
+        var trsId = snowflakeUtensil.NextId();
         try
         {
-            var result = await _client.DepositWithdrawAsync(
+            var result = await client.DepositWithdrawAsync(
             apiUrl: query.ApiUrl,
             appId: query.AppId,
             secretKey: query.SecretKey,
@@ -40,7 +29,7 @@ internal class FundInGetService : IGetService<FundInQuery, FundResult>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An exception occurred with this fund in.");
+            logger.LogError(ex, "An exception occurred with this fund in.");
             throw;
         }
     }

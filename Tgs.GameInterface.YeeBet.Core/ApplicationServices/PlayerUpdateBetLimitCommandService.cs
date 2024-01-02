@@ -2,17 +2,10 @@
 
 namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-internal class PlayerUpdateBetLimitCommandService : IGetService<PlayerUpdateBetLimitCommand, bool>
+internal class PlayerUpdateBetLimitCommandService(IGameApiClient client) : IGetService<PlayerUpdateBetLimitCommand, bool>
 {
-    private readonly IGameApiClient _client;
-
-    public PlayerUpdateBetLimitCommandService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public ValueTask<bool> GetAsync(PlayerUpdateBetLimitCommand query, CancellationToken cancellationToken = default)
-        => _client.SetQuotaAsync(
+        => client.SetQuotaAsync(
             query.ApiUrl,
             query.AppId,
             query.SecretKey,

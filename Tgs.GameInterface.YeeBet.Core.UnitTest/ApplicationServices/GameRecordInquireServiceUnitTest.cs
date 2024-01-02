@@ -27,7 +27,7 @@ public class GameRecordInquireServiceUnitTest
             ArraySize = 1,
             Data = new BetDetailResult[]
             {
-                new BetDetailResult(
+                new(
                     ExternalRoundId: "893018",
                     ExternalGameId: "3006",
                     PlayerCode: "4ucmqplxb029",

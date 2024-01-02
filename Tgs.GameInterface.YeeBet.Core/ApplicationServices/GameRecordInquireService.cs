@@ -2,18 +2,11 @@
 
 namespace Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
-internal class GameRecordInquireService : IGetService<GameRecordInquire, GameRecordInquireResult>
+internal class GameRecordInquireService(IGameApiClient client) : IGetService<GameRecordInquire, GameRecordInquireResult>
 {
-    private readonly IGameApiClient _client;
-
-    public GameRecordInquireService(IGameApiClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<GameRecordInquireResult> GetAsync(GameRecordInquire query, CancellationToken cancellationToken = default)
     {
-        var betsResult = await _client
+        var betsResult = await client
             .BetsDetailAsync(
                 apiUrl: query.ApiUrl,
                 appId: query.AppId,

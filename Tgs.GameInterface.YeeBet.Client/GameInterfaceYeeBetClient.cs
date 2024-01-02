@@ -4,15 +4,9 @@ using Tgs.GameInterface.YeeBet.Protos;
 
 namespace Tgs.GameInterface.YeeBet.Client;
 
-internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
+internal class GameInterfaceYeeBetClient(
+    GameInterfaceYeeBet.GameInterfaceYeeBetClient client) : IGameInterfaceYeeBetClient
 {
-    private readonly GameInterfaceYeeBet.GameInterfaceYeeBetClient _client;
-
-    public GameInterfaceYeeBetClient(GameInterfaceYeeBet.GameInterfaceYeeBetClient client)
-    {
-        _client = client ?? throw new ArgumentNullException(nameof(client));
-    }
-
     public async ValueTask<string> CheckingServiceAsync(string machineName, CancellationToken cancellationToken = default)
     {
         var request = new CheckingServiceRequest
@@ -20,7 +14,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             MachineName = machineName,
         };
 
-        var reply = await _client
+        var reply = await client
             .CheckingServiceAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -30,7 +24,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
     }
 
     public async ValueTask<FundReply> FundInAsync(Uri apiUrl, string appId, string secretKey, string playerCode, decimal amount, CancellationToken cancellationToken = default)
-        => await _client
+        => await client
             .FundInAsync(
                 request: new FundRequest
                 {
@@ -44,7 +38,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             .ConfigureAwait(false);
 
     public async ValueTask<FundReply> FundOutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, decimal amount, CancellationToken cancellationToken = default)
-        => await _client
+        => await client
             .FundOutAsync(
                 request: new FundRequest
                 {
@@ -59,7 +53,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
 
     public async ValueTask<bool> FundStatusAsync(Uri apiUrl, string appId, string secretKey, string playerCode, string trsId, CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
         .FundStatusAsync(
             request: new FundStatusRequest
             {
@@ -77,7 +71,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
 
     public async ValueTask<GameRecordInfoReply> GameRecordInquireAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex, CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
             .GameRecordInquireAsync(
                 request: new GameRecordInquireRequest
                 {
@@ -97,7 +91,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
 
     public async IAsyncEnumerable<GameRecordInfo> GameRecordAsync(Uri apiUrl, string appId, string secretKey, int size, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var reply = await _client
+        var reply = await client
             .GameRecordAsync(
                 request: new GameRecordRequest
                 {
@@ -137,7 +131,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             request.ExternalRoundIds.Add(item);
         }
 
-        return await _client
+        return await client
             .GameRecordMarkAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -146,7 +140,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
 
     public async ValueTask<string> GameUrlAsync(Uri apiUrl, string appId, string secretKey, string playerCode, int clientType, int languageId, CancellationToken cancellationToken = default)
     {
-        var result = await _client
+        var result = await client
             .GameUrlAsync(
                 request: new GameUrlRequest
                 {
@@ -164,7 +158,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
     }
 
     public async ValueTask<PlayerBalanceReply> PlayerBalanceAsync(Uri apiUrl, string appId, string secretKey, string playerCode, CancellationToken cancellationToken = default)
-        => await _client
+        => await client
             .PlayerBalanceAsync(
                 request: new PlayerBalanceRequest
                 {
@@ -197,7 +191,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             LanguageId = languageId,
         };
 
-        _ = await _client
+        _ = await client
             .PlayerCreateAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -234,7 +228,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             }
         }
 
-        _ = await _client
+        _ = await client
             .PlayerCreateByBetLimitAsync(
                 request: request,
                 cancellationToken: cancellationToken)
@@ -242,7 +236,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
     }
 
     public async ValueTask PlayerLogoutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, CancellationToken cancellationToken = default)
-        => await _client
+        => await client
             .PlayerLogoutAsync(
                 request: new PlayerLogoutRequest
                 {
@@ -269,7 +263,7 @@ internal class GameInterfaceYeeBetClient : IGameInterfaceYeeBetClient
             request.Quotas.Add(quota);
         }
 
-        var reply = await _client
+        var reply = await client
             .PlayerUpdateBetLimitAsync(
             request: request,
             cancellationToken: cancellationToken)

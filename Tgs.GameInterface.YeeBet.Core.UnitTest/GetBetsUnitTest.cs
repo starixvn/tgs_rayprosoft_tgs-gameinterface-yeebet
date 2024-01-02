@@ -130,6 +130,6 @@ public class GetBetsUnitTest
             .ConfigureAwait(false);
 
         Assert.IsNotNull(actual);
-        Assert.IsTrue(actual.Any());
+        Assert.IsTrue(condition: actual.Length != 0);
     }
 }

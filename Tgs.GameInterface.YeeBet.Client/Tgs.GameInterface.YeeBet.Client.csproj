@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.0.12</Version>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Version>0.0.13</Version>
 		<Authors>Raypro</Authors>
-		<RootNamespace>Tgs.GameInterface.YeeBet.Client</RootNamespace>
-		<PackageId>Tgs.GameInterface.YeeBet.Client</PackageId>
-		<Title>Tgs.GameInterface.YeeBet.Client</Title>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-yeebet</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-gameinterface-yeebet.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
+		<RootNamespace>Tgs.GameInterface.YeeBet.Client</RootNamespace>
+		<PackageId>Tgs.GameInterface.YeeBet.Client</PackageId>
+		<Title>Tgs.GameInterface.YeeBet.Client</Title>
+		<Description>Tgs.GameInterface.YeeBet.Client</Description>
 		<PackageTags>Tgs GameInterface YeeBet Client</PackageTags>
 	</PropertyGroup>
 

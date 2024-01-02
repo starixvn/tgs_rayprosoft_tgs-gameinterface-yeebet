@@ -6,6 +6,8 @@ namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 [TestClass]
 public class PlayerCreateByBetLimitCommandServiceUnitTest
 {
+    private static readonly int[] _Quotas = [5, 6, 7];
+
     [TestMethod]
     public async Task Normal_Process()
     {
@@ -19,7 +21,7 @@ public class PlayerCreateByBetLimitCommandServiceUnitTest
             ClientType: 1,
             Currency: "CNY",
             LanguageId: 1,
-            Quotas: new int[] { 5, 6, 7 });
+            Quotas: _Quotas);
 
         var sut = new PlayerCreateByBetLimitCommandService(fakeGameApiClient);
 
