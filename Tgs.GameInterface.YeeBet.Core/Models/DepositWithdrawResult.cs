@@ -2,4 +2,4 @@
 public record DepositWithdrawResult(
     string OrderNo,
     decimal Balance,
-    string Response);
+    string Res);

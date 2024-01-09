@@ -38,6 +38,7 @@ public class GameInterfaceYeeBetGrpcService(
             request.AppId,
             request.SecretKey,
             request.PlayerCode,
+            request.OrderId,
             request.Amount);
 
         var result = await fundOutService
@@ -48,18 +49,19 @@ public class GameInterfaceYeeBetGrpcService(
         {
             Balance = result.Balance,
             TransactionId = result.TransactionId,
-            Response = result.Response,
+            Res = result.Res,
         };
     }
 
     public override async Task<FundReply> FundIn(FundRequest request, ServerCallContext context)
     {
         var query = new FundInQuery(
-            new Uri(request.ApiUrl),
-            request.AppId,
-            request.SecretKey,
-            request.PlayerCode,
-            request.Amount);
+            ApiUrl: new Uri(request.ApiUrl),
+            AppId: request.AppId,
+            SecretKey: request.SecretKey,
+            PlayerCode: request.PlayerCode,
+            OrderId: request.OrderId,
+            Amount: request.Amount);
 
         var result = await fundInService
             .GetAsync(query, context.CancellationToken)
@@ -69,7 +71,7 @@ public class GameInterfaceYeeBetGrpcService(
         {
             Balance = result.Balance,
             TransactionId = result.TransactionId,
-            Response = result.Response,
+            Res = result.Res,
         };
     }
 
@@ -80,7 +82,7 @@ public class GameInterfaceYeeBetGrpcService(
             request.AppId,
             request.SecretKey,
             request.PlayerCode,
-            request.TrsId);
+            request.OrderId);
 
         var result = await fundStatusService
             .GetAsync(query, context.CancellationToken)

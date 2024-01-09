@@ -75,7 +75,8 @@ message FundRequest {
 	string app_id = 2;	
 	string secret_key = 3;	
 	string player_code = 4;
-	phoenix.protobuf.DecimalValue amount = 5;
+	int64 order_id = 5;
+	phoenix.protobuf.DecimalValue amount = 6;
 }
 
 message FundStatusRequest {
@@ -83,7 +84,7 @@ message FundStatusRequest {
 	string app_id = 2;	
 	string secret_key = 3;	
 	string player_code = 4;
-	string trs_id = 5;
+	int64 order_id = 5;
 }
 
 message GameUrlRequest {
@@ -136,7 +137,7 @@ message PlayerBalanceReply {
 message FundReply {
 	string transaction_id = 1;	
 	phoenix.protobuf.DecimalValue balance = 2;	
-	string response = 3;
+	string res = 3;
 }
 
 message GameUrlReply{

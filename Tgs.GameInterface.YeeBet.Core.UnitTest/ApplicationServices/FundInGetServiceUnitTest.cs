@@ -11,8 +11,6 @@ public class FundInGetServiceUnitTest
     [TestMethod]
     public async Task Normal_Process()
     {
-        var fakeLog = NullLogger<FundInGetService>.Instance;
-        var fakeSnowflakeUtensil = Substitute.For<ISnowflakeUtensil>();
         var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
         var query = new FundInQuery(
@@ -20,38 +18,30 @@ public class FundInGetServiceUnitTest
             AppId: "xtdA15OTVGEP",
             SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
             PlayerCode: "4ucmqplxb029",
+            OrderId: 1704777591586,
             Amount: 1m);
 
-        var trsId = 1640526045735424000;
-        _ = fakeSnowflakeUtensil
-            .NextId()
-            .Returns(trsId);
-
         var result = new DepositWithdrawResult(
-            OrderNo: trsId.ToString(),
+            OrderNo: query.OrderId.ToString(),
             Balance: 1,
-            Response: "{}");
+            Res: "{}");
 
-        _ = fakeGameApiClient
-             .DepositWithdrawAsync(
-                 Arg.Is(query.ApiUrl),
-                 Arg.Is(query.AppId),
-                 Arg.Is(query.SecretKey),
-                 Arg.Is(query.PlayerCode),
-                 Arg.Is(trsId),
-                 Arg.Is(-query.Amount))
-             .Returns(result);
+        _ = fakeGameApiClient.DepositWithdrawAsync(
+            apiUrl: Arg.Is(query.ApiUrl),
+            appId: Arg.Is(query.AppId),
+            secretKey: Arg.Is(query.SecretKey),
+            username: Arg.Is(query.PlayerCode),
+            tradeNo: Arg.Is(query.OrderId),
+            amount: Arg.Is(-query.Amount))
+            .Returns(result);
 
-        var sut = new FundInGetService(
-            fakeLog,
-            fakeSnowflakeUtensil,
-            fakeGameApiClient);
+        var sut = new FundInGetService(fakeGameApiClient);
 
         var actual = await sut
             .GetAsync(query)
             .ConfigureAwait(false);
 
         Assert.IsNotNull(actual);
-        Assert.AreEqual(trsId.ToString(), actual.TransactionId);
+        Assert.AreEqual(query.OrderId.ToString(), actual.TransactionId);
     }
 }

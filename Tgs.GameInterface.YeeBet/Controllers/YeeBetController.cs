@@ -25,6 +25,7 @@ public class YeeBetController : ControllerBase
     ///             "appId": "xtdA15OTVGEP",
     ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0",
     ///             "playerCode": "4ucmqplxb029",
+    ///             "orderId": 1704777287586
     ///             "amount": 100
     ///         }
     /// </remarks>
@@ -38,6 +39,7 @@ public class YeeBetController : ControllerBase
             AppId: source.AppId,
             SecretKey: source.SecretKey,
             PlayerCode: source.PlayerCode,
+            OrderId: source.OrderId,
             Amount: source.Amount);
 
         var result = await service
@@ -49,7 +51,7 @@ public class YeeBetController : ControllerBase
         return new FundResultViewModel(
             TransactionId: result.TransactionId,
             Balance: result.Balance,
-            Response: result.Response);
+            Res: result.Res);
     }
 
     /// <summary>
@@ -68,6 +70,7 @@ public class YeeBetController : ControllerBase
     ///             "appId": "xtdA15OTVGEP",
     ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0",
     ///             "playerCode": "4ucmqplxb029",
+    ///             "orderId": 1704777298592
     ///             "amount": 100
     ///         }
     /// </remarks>
@@ -81,6 +84,7 @@ public class YeeBetController : ControllerBase
             AppId: source.AppId,
             SecretKey: source.SecretKey,
             PlayerCode: source.PlayerCode,
+            OrderId: source.OrderId,
             Amount: source.Amount);
 
         var result = await service
@@ -92,7 +96,7 @@ public class YeeBetController : ControllerBase
         return new FundResultViewModel(
             TransactionId: result.TransactionId,
             Balance: result.Balance,
-            Response: result.Response);
+            Res: result.Res);
     }
 
     /// <summary>
@@ -430,7 +434,7 @@ public class YeeBetController : ControllerBase
     ///             "appId": "xtdA15OTVGEP",
     ///             "secretKey": "4885366DF30D880224FF6AA46FBDE4F0",
     ///             "playerCode": "4ucmqplxb029",
-    ///             "trsId": "1640526045735424000"
+    ///             "orderId": 1704777298592
     ///         }
     /// </remarks>
     [HttpPost("fund/Status", Name = "FundStatus")]
@@ -443,7 +447,7 @@ public class YeeBetController : ControllerBase
             AppId: source.AppId,
             SecretKey: source.SecretKey,
             PlayerCode: source.PlayerCode,
-            TrsId: source.TrsId);
+            OrderId: source.OrderId);
 
         return service.GetAsync(
             query: query,

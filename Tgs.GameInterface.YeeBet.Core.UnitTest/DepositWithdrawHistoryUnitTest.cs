@@ -52,7 +52,7 @@ public class DepositWithdrawHistoryUnitTest
         var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
-            .DepositWithdrawHistoryAsync(apiUrl, appId, secretKey, username, tradeNo.ToString())
+            .DepositWithdrawHistoryAsync(apiUrl, appId, secretKey, username, tradeNo)
             .ConfigureAwait(false);
 
         Assert.IsTrue(actual);
@@ -100,7 +100,7 @@ public class DepositWithdrawHistoryUnitTest
         var sut = new GameApiClient(fakeLog, fakeHttpClient, fakeHasher);
 
         var actual = await sut
-            .DepositWithdrawHistoryAsync(apiUrl, appId, secretKey, username, tradeNo.ToString())
+            .DepositWithdrawHistoryAsync(apiUrl, appId, secretKey, username, tradeNo)
             .ConfigureAwait(false);
 
         Assert.IsFalse(actual);

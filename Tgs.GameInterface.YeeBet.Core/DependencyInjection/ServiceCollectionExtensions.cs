@@ -9,14 +9,13 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         Action<IPAddressOptions, IServiceProvider> ipAddressOptions)
         => services
-            .AddOptions<IPAddressOptions>()
-            .Configure(ipAddressOptions)
-            .Services
-            .AddHttpClient<IGameApiClient, GameApiClient>()
-            .Services
-            .RegisterAllServiceUtilityTypes(
-                Assembly.GetExecutingAssembly(),
-                ServiceLifetime.Transient)
-            .AddSingleton<ISnowflakeUtensil, SnowflakeUtensil>()
-            .AddSingleton<IYeeBetHasher, YeeBetHasher>();
+        .AddOptions<IPAddressOptions>()
+        .Configure(ipAddressOptions)
+        .Services
+        .AddHttpClient<IGameApiClient, GameApiClient>()
+        .Services
+        .RegisterAllServiceUtilityTypes(
+            Assembly.GetExecutingAssembly(),
+            ServiceLifetime.Transient)
+        .AddSingleton<IYeeBetHasher, YeeBetHasher>();
 }

@@ -16,16 +16,15 @@ public class FundStatusGetServiceUnitTest
             AppId: "xtdA15OTVGEP",
             SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
             PlayerCode: "4ucmqplxb029",
-            TrsId: "1640520550106664960");
+            OrderId: 1640520550106664960);
 
-        _ = fakeGameApiClient
-             .DepositWithdrawHistoryAsync(
-                 Arg.Is(query.ApiUrl),
-                 Arg.Is(query.AppId),
-                 Arg.Is(query.SecretKey),
-                 Arg.Is(query.PlayerCode),
-                 Arg.Is(query.TrsId.ToString()))
-             .Returns(true);
+        _ = fakeGameApiClient.DepositWithdrawHistoryAsync(
+            apiUrl: Arg.Is(query.ApiUrl),
+            appId: Arg.Is(query.AppId),
+            secretKey: Arg.Is(query.SecretKey),
+            username: Arg.Is(query.PlayerCode),
+            tradeno: Arg.Is(query.OrderId))
+            .Returns(true);
 
         var sut = new FundStatusGetService(fakeGameApiClient);
 

@@ -5,4 +5,5 @@ public record FundInQuery(
     string AppId,
     string SecretKey,
     string PlayerCode,
+    long OrderId,
     decimal Amount);

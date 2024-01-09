@@ -126,16 +126,16 @@ internal class GameApiClient(
         return new DepositWithdrawResult(
             orderNo,
             balance,
-            Response: jsonNode.ToString());
+            Res: jsonNode.ToString());
     }
 
-    public async ValueTask<bool> DepositWithdrawHistoryAsync(Uri apiUrl, string appId, string secretKey, string username, string tradeno, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> DepositWithdrawHistoryAsync(Uri apiUrl, string appId, string secretKey, string username, long tradeno, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
             { "appid", appId },
             { "username",username },
-            { "tradeno", tradeno },
+            { "tradeno", tradeno.ToString() },
             { "size", "1" },
             { "index", "1" },
         };
@@ -277,15 +277,7 @@ internal class GameApiClient(
         }
     }
 
-    public async ValueTask RegisterAsync(
-        Uri apiUrl,
-        string appId,
-        string secretKey,
-        int clientType,
-        string currency,
-        int languageId,
-        string username,
-        CancellationToken cancellationToken = default)
+    public async ValueTask RegisterAsync(Uri apiUrl, string appId, string secretKey, int clientType, string currency, int languageId, string username, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -309,16 +301,7 @@ internal class GameApiClient(
             throw new Exception($"The game provider responded with an error.({result} {jsonNode["desc"]})");
     }
 
-    public async ValueTask RegisterAsync(
-        Uri apiUrl,
-        string appId,
-        string secretKey,
-        int clientType,
-        string currency,
-        int languageId,
-        IEnumerable<int> quotas,
-        string username,
-        CancellationToken cancellationToken = default)
+    public async ValueTask RegisterAsync(Uri apiUrl, string appId, string secretKey, int clientType, string currency, int languageId, IEnumerable<int> quotas, string username, CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, string>
         {
@@ -394,12 +377,7 @@ internal class GameApiClient(
         return true;
     }
 
-    private async ValueTask<JsonNode> GetAsync(
-        Uri apiUrl,
-        string path,
-        IEnumerable<KeyValuePair<string, string>> parameters,
-        string logPrefix,
-        CancellationToken cancellationToken = default)
+    private async ValueTask<JsonNode> GetAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
     {
         logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
 
@@ -446,12 +424,7 @@ internal class GameApiClient(
         return JsonNode.Parse(responseMessage)!;
     }
 
-    private async ValueTask<JsonNode> PostAsync(
-        Uri apiUrl,
-        string path,
-        IEnumerable<KeyValuePair<string, string>> parameters,
-        string logPrefix,
-        CancellationToken cancellationToken = default)
+    private async ValueTask<JsonNode> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
     {
         logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
 

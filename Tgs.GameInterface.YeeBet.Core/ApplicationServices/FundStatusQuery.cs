@@ -5,4 +5,4 @@ public record FundStatusQuery(
     string AppId,
     string SecretKey,
     string PlayerCode,
-    string TrsId);
+    long OrderId);

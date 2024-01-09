@@ -23,35 +23,35 @@ internal class GameInterfaceYeeBetClient(
         return reply.MachineName;
     }
 
-    public async ValueTask<FundReply> FundInAsync(Uri apiUrl, string appId, string secretKey, string playerCode, decimal amount, CancellationToken cancellationToken = default)
-        => await client
-            .FundInAsync(
-                request: new FundRequest
-                {
-                    ApiUrl = apiUrl.ToString(),
-                    AppId = appId,
-                    SecretKey = secretKey,
-                    PlayerCode = playerCode,
-                    Amount = amount,
-                },
-                cancellationToken: cancellationToken)
+    public async ValueTask<FundReply> FundInAsync(Uri apiUrl, string appId, string secretKey, string playerCode, long orderId, decimal amount, CancellationToken cancellationToken = default)
+        => await client.FundInAsync(
+            request: new FundRequest
+            {
+                ApiUrl = apiUrl.ToString(),
+                AppId = appId,
+                SecretKey = secretKey,
+                PlayerCode = playerCode,
+                OrderId = orderId,
+                Amount = amount
+            },
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-    public async ValueTask<FundReply> FundOutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, decimal amount, CancellationToken cancellationToken = default)
-        => await client
-            .FundOutAsync(
-                request: new FundRequest
-                {
-                    ApiUrl = apiUrl.ToString(),
-                    AppId = appId,
-                    SecretKey = secretKey,
-                    PlayerCode = playerCode,
-                    Amount = amount,
-                },
-                cancellationToken: cancellationToken)
+    public async ValueTask<FundReply> FundOutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, long orderId, decimal amount, CancellationToken cancellationToken = default)
+        => await client.FundOutAsync(
+            request: new FundRequest
+            {
+                ApiUrl = apiUrl.ToString(),
+                AppId = appId,
+                SecretKey = secretKey,
+                PlayerCode = playerCode,
+                OrderId = orderId,
+                Amount = amount,
+            },
+            cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-    public async ValueTask<bool> FundStatusAsync(Uri apiUrl, string appId, string secretKey, string playerCode, string trsId, CancellationToken cancellationToken = default)
+    public async ValueTask<bool> FundStatusAsync(Uri apiUrl, string appId, string secretKey, string playerCode, long orderId, CancellationToken cancellationToken = default)
     {
         var reply = await client
         .FundStatusAsync(
@@ -61,7 +61,7 @@ internal class GameInterfaceYeeBetClient(
                 AppId = appId,
                 SecretKey = secretKey,
                 PlayerCode = playerCode,
-                TrsId = trsId,
+                OrderId = orderId,
             },
             cancellationToken: cancellationToken)
         .ConfigureAwait(false);
@@ -170,15 +170,7 @@ internal class GameInterfaceYeeBetClient(
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-    public async ValueTask PlayerCreateAsync(
-        Uri apiUrl,
-        string appId,
-        string secretKey,
-        string playerCode,
-        int clientType,
-        string currency,
-        int languageId,
-        CancellationToken cancellationToken = default)
+    public async ValueTask PlayerCreateAsync(Uri apiUrl, string appId, string secretKey, string playerCode, int clientType, string currency, int languageId, CancellationToken cancellationToken = default)
     {
         var request = new PlayerCreateRequest
         {
@@ -198,16 +190,7 @@ internal class GameInterfaceYeeBetClient(
             .ConfigureAwait(false);
     }
 
-    public async ValueTask PlayerCreateByBetLimitAsync(
-        Uri apiUrl,
-        string appId,
-        string secretKey,
-        string playerCode,
-        int clientType,
-        string currency,
-        int languageId,
-        IEnumerable<int> quotas,
-        CancellationToken cancellationToken = default)
+    public async ValueTask PlayerCreateByBetLimitAsync(Uri apiUrl, string appId, string secretKey, string playerCode, int clientType, string currency, int languageId, IEnumerable<int> quotas, CancellationToken cancellationToken = default)
     {
         var request = new PlayerCreateByBetLimitRequest
         {
