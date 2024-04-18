@@ -2,5 +2,5 @@
 
 public interface IYeeBetHasher
 {
-    public string ComputeHash(IDictionary<string, string> dict, string secretKey);
+	public string ComputeHash(IDictionary<string, string> dict, string secretKey);
 }

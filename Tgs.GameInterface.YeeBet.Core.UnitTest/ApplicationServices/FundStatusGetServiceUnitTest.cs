@@ -3,35 +3,32 @@ using Tgs.GameInterface.YeeBet.Core.ApplicationServices;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class FundStatusGetServiceUnitTest
 {
-    [TestMethod]
-    public async Task Normal_Process()
-    {
-        var fakeGameApiClient = Substitute.For<IGameApiClient>();
+	[Fact]
+	public async Task Normal_Process()
+	{
+		var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
-        var query = new FundStatusQuery(
-            ApiUrl: new Uri("http://api.98kbus.top/"),
-            AppId: "xtdA15OTVGEP",
-            SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
-            PlayerCode: "4ucmqplxb029",
-            OrderId: 1640520550106664960);
+		var query = new FundStatusQuery(
+			ApiUrl: new Uri("http://api.98kbus.top/"),
+			AppId: "xtdA15OTVGEP",
+			SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
+			PlayerCode: "4ucmqplxb029",
+			OrderId: 1640520550106664960);
 
-        _ = fakeGameApiClient.DepositWithdrawHistoryAsync(
-            apiUrl: Arg.Is(query.ApiUrl),
-            appId: Arg.Is(query.AppId),
-            secretKey: Arg.Is(query.SecretKey),
-            username: Arg.Is(query.PlayerCode),
-            tradeno: Arg.Is(query.OrderId))
-            .Returns(true);
+		_ = fakeGameApiClient.DepositWithdrawHistoryAsync(
+			apiUrl: Arg.Is(query.ApiUrl),
+			appId: Arg.Is(query.AppId),
+			secretKey: Arg.Is(query.SecretKey),
+			username: Arg.Is(query.PlayerCode),
+			tradeno: Arg.Is(query.OrderId))
+			.Returns(true);
 
-        var sut = new FundStatusGetService(fakeGameApiClient);
+		var sut = new FundStatusGetService(fakeGameApiClient);
 
-        var actual = await sut
-            .GetAsync(query)
-            .ConfigureAwait(false);
+		var actual = await sut.GetAsync(query);
 
-        Assert.IsTrue(actual);
-    }
+		Assert.True(actual);
+	}
 }

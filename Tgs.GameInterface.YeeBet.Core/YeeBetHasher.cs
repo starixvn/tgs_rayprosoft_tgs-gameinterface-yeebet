@@ -7,25 +7,22 @@ namespace Tgs.GameInterface.YeeBet.Core;
 
 public class YeeBetHasher(ILogger<YeeBetHasher> logger) : IYeeBetHasher
 {
-    public string ComputeHash(IDictionary<string, string> dict, string secretKey)
-    {
-        var sortDict = dict
-            .OrderBy(x => x.Key)
-            .Select(x =>
-            {
-                return $"{x.Key}={x.Value}";
-            });
+	public string ComputeHash(IDictionary<string, string> dict, string secretKey)
+	{
+		var sortDict = dict
+			.OrderBy(x => x.Key)
+			.Select(x => $"{x.Key}={x.Value}");
 
-        var content = string.Join("&", sortDict);
+		var content = string.Join("&", sortDict);
 
-        var plainText = $"{content}&key={secretKey}";
+		var plainText = $"{content}&key={secretKey}";
 
-        logger.LogInformation("YeeBetHasher ComputeHash sortDict:{sortDict}, secretKey:{secretKey}", JsonSerializer.Serialize(sortDict), secretKey);
+		logger.LogInformation("YeeBetHasher ComputeHash sortDict:{sortDict}, secretKey:{secretKey}", JsonSerializer.Serialize(sortDict), secretKey);
 
-        var data = Encoding.UTF8.GetBytes(plainText);
+		var data = Encoding.UTF8.GetBytes(plainText);
 
-        var hash = MD5.HashData(data);
+		var hash = MD5.HashData(data);
 
-        return Convert.ToHexString(hash).ToLower();
-    }
+		return Convert.ToHexString(hash).ToLower();
+	}
 }

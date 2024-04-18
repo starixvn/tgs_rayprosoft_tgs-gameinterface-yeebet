@@ -4,37 +4,34 @@ using Tgs.GameInterface.YeeBet.Core.Models;
 
 namespace Tgs.GameInterface.YeeBet.Core.UnitTest.ApplicationServices;
 
-[TestClass]
 public class GameRecordQueryServiceUnitTest
 {
-    [TestMethod]
-    public async Task Normal_Process()
-    {
-        var fakeGameApiClient = Substitute.For<IGameApiClient>();
+	[Fact]
+	public async Task Normal_Process()
+	{
+		var fakeGameApiClient = Substitute.For<IGameApiClient>();
 
-        var query = new GameRecordQuery(
-            ApiUrl: new Uri("http://api.98kbus.top/"),
-            AppId: "xtdA15OTVGEP",
-            SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
-            Size: 1000);
+		var query = new GameRecordQuery(
+			ApiUrl: new Uri("http://api.98kbus.top/"),
+			AppId: "xtdA15OTVGEP",
+			SecretKey: "4885366DF30D880224FF6AA46FBDE4F0",
+			Size: 1000);
 
-        var sut = new GameRecordQueryService(fakeGameApiClient);
+		var sut = new GameRecordQueryService(fakeGameApiClient);
 
-        _ = await sut
-            .QueryAsync(query)
-            .ToArrayAsync()
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<GameRecordResult>();
+		_ = await sut
+			.QueryAsync(query)
+			.ToArrayAsync()
+			?? Enumerable.Empty<GameRecordResult>();
 
-        _ = await fakeGameApiClient
-            .Received(1)
-            .GetBetsAsync(
-                 Arg.Is(query.ApiUrl),
-                 Arg.Is(query.AppId),
-                 Arg.Is(query.SecretKey),
-                 Arg.Is(query.Size))
-            .ToArrayAsync()
-            .ConfigureAwait(false)
-            ?? Enumerable.Empty<BetResult>();
-    }
+		_ = await fakeGameApiClient
+			.Received(1)
+			.GetBetsAsync(
+				 Arg.Is(query.ApiUrl),
+				 Arg.Is(query.AppId),
+				 Arg.Is(query.SecretKey),
+				 Arg.Is(query.Size))
+			.ToArrayAsync()
+			?? Enumerable.Empty<BetResult>();
+	}
 }

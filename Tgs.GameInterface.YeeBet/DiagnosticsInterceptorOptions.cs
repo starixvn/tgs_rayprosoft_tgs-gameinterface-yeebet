@@ -4,6 +4,6 @@ namespace Tgs.GameInterface.YeeBet;
 
 public class DiagnosticsInterceptorOptions
 {
-    public ActivitySource InterceptorActivitySource { get; set; } =
-        new ActivitySource($"Tgs.GameInterface.YeeBet.DiagnosticsInterceptor");
+	public ActivitySource InterceptorActivitySource { get; set; } =
+		new ActivitySource($"Tgs.GameInterface.YeeBet.DiagnosticsInterceptor");
 }

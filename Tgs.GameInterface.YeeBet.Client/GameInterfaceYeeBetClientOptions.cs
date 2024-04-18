@@ -2,5 +2,5 @@
 
 public class GameInterfaceYeeBetClientOptions
 {
-    public Uri BaseUrl { get; set; } = default!;
+	public Uri BaseUrl { get; set; } = default!;
 }

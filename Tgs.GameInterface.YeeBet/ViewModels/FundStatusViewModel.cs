@@ -1,8 +1,8 @@
 ﻿namespace Tgs.GameInterface.YeeBet.ViewModels;
 
 public record FundStatusViewModel(
-    Uri ApiUrl,
-    string AppId,
-    string SecretKey,
-    string PlayerCode,
-    long OrderId);
+	Uri ApiUrl,
+	string AppId,
+	string SecretKey,
+	string PlayerCode,
+	long OrderId);
