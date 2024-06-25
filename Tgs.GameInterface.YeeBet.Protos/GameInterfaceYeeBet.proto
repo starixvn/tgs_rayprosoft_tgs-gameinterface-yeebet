@@ -15,6 +15,7 @@ service GameInterfaceYeeBet {
   rpc PlayerUpdateBetLimit (PlayerUpdateBetLimitRequest) returns (BaseReply);
   rpc PlayerBalance (PlayerBalanceRequest) returns (PlayerBalanceReply);  
   rpc PlayerLogout (PlayerLogoutRequest) returns (BaseReply);
+  rpc PlayerOnline (PlayerOnlineRequest) returns (PlayerOnlineReply);
   rpc FundIn (FundRequest) returns (FundReply);
   rpc FundOut (FundRequest) returns (FundReply);
   rpc FundStatus(FundStatusRequest) returns (BaseReply);
@@ -62,6 +63,12 @@ message PlayerBalanceRequest {
 	string player_code = 4;
 }
 
+message PlayerOnlineRequest {
+	string api_url = 1;
+	string app_id = 2;	
+	string secret_key = 3;
+	string player_code = 4;
+}
 
 message PlayerLogoutRequest {
 	string api_url = 1;
@@ -168,6 +175,10 @@ message GameRecordInfoReply{
 	int32 total = 1;
 	int32 array_size = 2;
 	repeated GameRecordInfo items = 3;
+}
+
+message PlayerOnlineReply {
+	bool online = 1;
 }
 
 message CheckingServiceReply{

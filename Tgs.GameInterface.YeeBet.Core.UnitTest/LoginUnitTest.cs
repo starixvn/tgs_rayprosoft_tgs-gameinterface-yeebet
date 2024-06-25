@@ -60,7 +60,7 @@ public class LoginUnitTest
 	}
 
 	[Fact]
-	public async void 未註冊玩家登入遊戲失敗()
+	public async Task 未註冊玩家登入遊戲失敗()
 	{
 		var apiUrl = new Uri("http://api.98kbus.top/");
 		var appId = "xtdA15OTVGEP";

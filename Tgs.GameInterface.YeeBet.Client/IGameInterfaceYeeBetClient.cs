@@ -16,6 +16,8 @@ public interface IGameInterfaceYeeBetClient
 
 	ValueTask PlayerLogoutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, CancellationToken cancellationToken = default);
 
+	ValueTask<bool> PlayerOnlineAsync(Uri apiUrl, string appId, string secretKey, string playerCode, CancellationToken cancellationToken = default);
+
 	ValueTask<FundReply> FundInAsync(Uri apiUrl, string appId, string secretKey, string playerCode, long orderId, decimal amount, CancellationToken cancellationToken = default);
 
 	ValueTask<FundReply> FundOutAsync(Uri apiUrl, string appId, string secretKey, string playerCode, long orderId, decimal amount, CancellationToken cancellationToken = default);

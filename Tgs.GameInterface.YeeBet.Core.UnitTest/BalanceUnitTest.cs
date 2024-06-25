@@ -49,8 +49,10 @@ public class BalanceUnitTest
 
 		var actual = await sut.BalanceAsync(apiUrl, appId, secretKey, username);
 
-		Assert.Equal(10950M, actual.Balance);
 		Assert.True(actual.IsPlayerExist);
+		Assert.Equal(10950M, actual.Balance);
+		Assert.True(actual.Isonline);
+		Assert.False(actual.Isplaying);
 	}
 
 	[Fact]
@@ -93,7 +95,9 @@ public class BalanceUnitTest
 
 		var actual = await sut.BalanceAsync(apiUrl, appId, secretKey, username);
 
-		Assert.Equal(0M, actual.Balance);
 		Assert.False(actual.IsPlayerExist);
+		Assert.Equal(0.0m, actual.Balance);
+		Assert.False(actual.Isonline);
+		Assert.False(actual.Isplaying);
 	}
 }

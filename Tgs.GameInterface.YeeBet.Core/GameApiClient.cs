@@ -25,16 +25,17 @@ internal class GameApiClient(
 
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, path: "api/user/balance", parameters, "balance", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, path: "api/user/balance", parameters, nameof(BalanceAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode!["result"]!.GetValue<int>();
 
 		if (result < 0)
-			return new BalanceResult(false, 0);
+			return new BalanceResult(false, 0, false, false);
 
 		var balance = jsonNode!["balance"]!.GetValue<decimal>();
-
-		return new BalanceResult(true, balance);
+		var isonline = jsonNode!["isonline"]!.GetValue<bool>();
+		var isplaying = jsonNode!["isplaying"]!.GetValue<bool>();
+		return new BalanceResult(true, balance, isonline, isplaying);
 	}
 
 	public async ValueTask<BetsDetailResult> BetsDetailAsync(Uri apiUrl, string appId, string secretKey, DateTimeOffset beginTime, DateTimeOffset endTime, int pageSize, int pageIndex = 0, CancellationToken cancellationToken = default)
@@ -51,7 +52,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, "api/record/bets/detail", parameters, "betsdetail", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, "api/record/bets/detail", parameters, nameof(BetsDetailAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -114,7 +115,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await PostAsync(apiUrl, path: "api/user/dw", parameters, "depositwithdraw", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await PostAsync(apiUrl, path: "api/user/dw", parameters, nameof(DepositWithdrawAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -144,7 +145,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, "api/user/trade", parameters, "trade", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, "api/user/trade", parameters, nameof(DepositWithdrawHistoryAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -167,7 +168,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, "api/data/getbets", parameters, "getbets", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, "api/data/getbets", parameters, nameof(GetBetsAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -213,7 +214,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await PostAsync(apiUrl, path: "api/kickout", parameters, "kickout", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await PostAsync(apiUrl, path: "api/kickout", parameters, nameof(KickOutAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -236,7 +237,7 @@ internal class GameApiClient(
 
 		parameters.Add("sign", sign);
 
-		var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, "login", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, nameof(LoginAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -256,7 +257,7 @@ internal class GameApiClient(
 
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, "api/quota/list", parameters, "quotalist", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, "api/quota/list", parameters, nameof(QuotaAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -294,7 +295,7 @@ internal class GameApiClient(
 
 		parameters.Add("sign", sign);
 
-		var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, "register", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, nameof(RegisterAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -321,7 +322,7 @@ internal class GameApiClient(
 
 		parameters.Add("sign", sign);
 
-		var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, "registerbyquota", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await PostAsync(apiUrl, path: "api/login", parameters, nameof(RegisterAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode["result"]!.GetValue<int>();
 
@@ -340,7 +341,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, "api/data/removebets", parameters, "removebets", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, "api/data/removebets", parameters, nameof(RemoveBetsAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode!["result"]!.GetValue<int>();
 
@@ -365,7 +366,7 @@ internal class GameApiClient(
 		var sign = hasher.ComputeHash(parameters, secretKey);
 		parameters.Add("sign", sign);
 
-		var jsonNode = await GetAsync(apiUrl, "api/quota/set", parameters, "setquota", cancellationToken).ConfigureAwait(false);
+		var jsonNode = await GetAsync(apiUrl, "api/quota/set", parameters, nameof(SetQuotaAsync), cancellationToken).ConfigureAwait(false);
 
 		var result = jsonNode!["result"]!.GetValue<int>();
 
@@ -380,8 +381,6 @@ internal class GameApiClient(
 
 	private async ValueTask<JsonNode> GetAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
 	{
-		logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
-
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 
 		foreach (var kvp in parameters)
@@ -404,7 +403,7 @@ internal class GameApiClient(
 			responseMessage = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false) ?? string.Empty;
 		}
 
-		var apiLogEvent = new GameApiLogEvent
+		var apiLogEvent = new
 		{
 			Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
 			Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,
@@ -427,8 +426,6 @@ internal class GameApiClient(
 
 	private async ValueTask<JsonNode> PostAsync(Uri apiUrl, string path, IEnumerable<KeyValuePair<string, string>> parameters, string logPrefix, CancellationToken cancellationToken = default)
 	{
-		logPrefix = $"{nameof(GameApiClient)}.{logPrefix}".ToLower();
-
 		HttpContent content = new FormUrlEncodedContent(parameters);
 
 		var sw = Stopwatch.StartNew();
@@ -446,7 +443,7 @@ internal class GameApiClient(
 			responseMessage = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false) ?? string.Empty;
 		}
 
-		var apiLogEvent = new GameApiLogEvent
+		var apiLogEvent = new
 		{
 			Path = httpResponseMessage.RequestMessage?.RequestUri?.AbsoluteUri.NoLongerThan(512) ?? string.Empty,
 			Method = httpResponseMessage.RequestMessage?.Method.ToString().NoLongerThan(8) ?? string.Empty,

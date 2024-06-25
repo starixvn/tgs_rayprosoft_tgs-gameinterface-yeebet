@@ -1,11 +1,10 @@
-﻿#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
-EXPOSE 9090
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -13,7 +12,8 @@ WORKDIR /src
 COPY ["nuget.config", "."]
 COPY ["Tgs.GameInterface.YeeBet/Tgs.GameInterface.YeeBet.csproj", "Tgs.GameInterface.YeeBet/"]
 COPY ["Tgs.GameInterface.YeeBet.Core/Tgs.GameInterface.YeeBet.Core.csproj", "Tgs.GameInterface.YeeBet.Core/"]
-RUN dotnet restore "./Tgs.GameInterface.YeeBet/./Tgs.GameInterface.YeeBet.csproj"
+COPY ["Tgs.GameInterface.YeeBet.Protos/Tgs.GameInterface.YeeBet.Protos.csproj", "Tgs.GameInterface.YeeBet.Protos/"]
+RUN dotnet restore "./Tgs.GameInterface.YeeBet/Tgs.GameInterface.YeeBet.csproj"
 COPY . .
 WORKDIR "/src/Tgs.GameInterface.YeeBet"
 RUN dotnet build "./Tgs.GameInterface.YeeBet.csproj" -c $BUILD_CONFIGURATION -o /app/build
