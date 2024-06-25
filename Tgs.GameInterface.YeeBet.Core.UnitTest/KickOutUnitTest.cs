@@ -50,7 +50,7 @@ public class KickOutUnitTest
 	}
 
 	[Fact]
-	public async void 玩家登出失敗()
+	public async Task 玩家登出失敗()
 	{
 		var apiUrl = new Uri("http://api.98kbus.top/");
 		var appId = "xtdA15OTVGEP";

@@ -16,6 +16,7 @@ public class GameInterfaceYeeBetGrpcService(
 	ICommandService<PlayerCreateByBetLimitCommand> playerCreateByBetLimitService,
 	IGetService<PlayerUpdateBetLimitCommand, bool> playerUpdateBetLimitService,
 	ICommandService<PlayerLogoutCommand> playerLogoutService,
+	IGetService<PlayerOnlineQuery, bool> playerOnlineService,
 	IGetService<PlayerBalanceQuery, PlayerBalanceResult> playerBalanceService,
 	IQueryService<GameRecordQuery, GameRecordResult> gameRecordService,
 	IGetService<GameRecordMarkQuery, bool> gameRecordMarkService,
@@ -315,6 +316,24 @@ public class GameInterfaceYeeBetGrpcService(
 		return new BaseReply
 		{
 			State = result
+		};
+	}
+
+	public override async Task<PlayerOnlineReply> PlayerOnline(PlayerOnlineRequest request, ServerCallContext context)
+	{
+		var query = new PlayerOnlineQuery(
+			new Uri(request.ApiUrl),
+			request.AppId,
+			request.SecretKey,
+			request.PlayerCode);
+
+		var result = await playerOnlineService
+			.GetAsync(query, context.CancellationToken)
+			.ConfigureAwait(false);
+
+		return new PlayerOnlineReply
+		{
+			Online = result,
 		};
 	}
 }

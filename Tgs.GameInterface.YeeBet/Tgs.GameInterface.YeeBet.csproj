@@ -35,10 +35,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Tgs.GameInterface.YeeBet.Core\Tgs.GameInterface.YeeBet.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\gameinterfaceyeebet.proto" />
+		<ProjectReference Include="..\Tgs.GameInterface.YeeBet.Protos\Tgs.GameInterface.YeeBet.Protos.csproj" />
 	</ItemGroup>
 
 </Project>

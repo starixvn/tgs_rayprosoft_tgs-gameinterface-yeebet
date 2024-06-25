@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.YeeBet.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameInterface.YeeBet.Client", "Tgs.GameInterface.YeeBet.Client\Tgs.GameInterface.YeeBet.Client.csproj", "{C9C89C4B-76C0-469D-BAE3-81A4DB9952AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameInterface.YeeBet.Protos", "Tgs.GameInterface.YeeBet.Protos\Tgs.GameInterface.YeeBet.Protos.csproj", "{B722162D-CFC5-4637-B21B-B27636D9BB6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C9C89C4B-76C0-469D-BAE3-81A4DB9952AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9C89C4B-76C0-469D-BAE3-81A4DB9952AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9C89C4B-76C0-469D-BAE3-81A4DB9952AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B722162D-CFC5-4637-B21B-B27636D9BB6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B722162D-CFC5-4637-B21B-B27636D9BB6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B722162D-CFC5-4637-B21B-B27636D9BB6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B722162D-CFC5-4637-B21B-B27636D9BB6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

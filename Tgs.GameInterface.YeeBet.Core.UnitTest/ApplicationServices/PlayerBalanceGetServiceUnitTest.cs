@@ -24,7 +24,7 @@ public class PlayerBalanceGetServiceUnitTest
 
 		_ = fakeGameApiClient
 			.BalanceAsync(apiUrl, appId, secretKey, username)
-			.Returns(new BalanceResult(true, Balance: 11000.0M));
+			.Returns(new BalanceResult(true, Balance: 11000.0M, false, false));
 
 		var sut = new PlayerBalanceGetService(fakeGameApiClient);
 

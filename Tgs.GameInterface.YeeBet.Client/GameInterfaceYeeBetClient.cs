@@ -254,4 +254,20 @@ internal class GameInterfaceYeeBetClient(
 
 		return reply.State;
 	}
+
+	public async ValueTask<bool> PlayerOnlineAsync(Uri apiUrl, string appId, string secretKey, string playerCode, CancellationToken cancellationToken = default)
+	{
+		var reply = await client.PlayerOnlineAsync(
+			request: new PlayerOnlineRequest
+			{
+				ApiUrl = apiUrl.ToString(),
+				AppId = appId,
+				SecretKey = secretKey,
+				PlayerCode = playerCode,
+			},
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		return reply.Online;
+	}
 }

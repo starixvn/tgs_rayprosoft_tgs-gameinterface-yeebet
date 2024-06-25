@@ -60,7 +60,7 @@ public class DepositWithdrawUnitTest
 	}
 
 	[Fact]
-	public async void 存款失敗_訂單號重複()
+	public async Task 存款失敗_訂單號重複()
 	{
 		var apiUrl = new Uri("http://api.98kbus.top/");
 		var appId = "xtdA15OTVGEP";
@@ -161,7 +161,7 @@ public class DepositWithdrawUnitTest
 	}
 
 	[Fact]
-	public async void 提款失敗()
+	public async Task 提款失敗()
 	{
 		var apiUrl = new Uri("http://api.98kbus.top/");
 		var appId = "xtdA15OTVGEP";
